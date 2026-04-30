@@ -1,0 +1,141 @@
+---
+import Base from '@/layouts/Base.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import '@/styles/global.css';
+---
+
+<Base title="O obci">
+  <Header />
+  <main id="main-content" class="flex-1">
+    <div class="bg-forest-700 text-white py-10">
+      <div class="max-w-6xl mx-auto px-4">
+        <nav class="text-forest-200 text-sm mb-2">
+          <a href="/" class="hover:text-white">Domů</a> / O obci
+        </nav>
+        <h1 class="text-3xl font-bold">O obci</h1>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+      <!-- Main content -->
+      <article class="lg:col-span-2 prose prose-gray max-w-none">
+        <h2>Historie obce</h2>
+        <p>
+          Německý název obce byl <em>Petersdorf</em>, odvozený od osobního jména Peter –
+          pravděpodobně podle rychtáře zmíněného v roce 1391. Původní český název byl
+          <em>Petrovice</em>; název <em>Petrov nad Desnou</em> byl přijat v roce 1924.
+        </p>
+        <p>
+          Obec prošla složitým správním vývojem. Od roku 1980 byla administrativně sloučena
+          se sousedním Sobotínem, avšak po referendu v roce 2008 se od roku 2010 opět stala
+          samostatnou obcí.
+        </p>
+
+        <h2>Geografie</h2>
+        <p>
+          Obec leží v nadmořské výšce 365 m n. m. v údolí řek Desné a Merty.
+          Nejvyšším bodem katastrálního území je <strong>Petrovský vrch</strong> (790 m n. m.).
+          Obec se nachází na silnici ze Šumperka přes Skřítek směrem na Ostravu.
+        </p>
+
+        <h2>Vývoj obyvatelstva</h2>
+        <p>Historické záznamy dokládají proměny obce v průběhu staletí:</p>
+        <ul>
+          <li>1677 – 62 obyvatel</li>
+          <li>1834 – 1 131 obyvatel ve 149 domech</li>
+          <li>1890 – 1 565 obyvatel ve 193 domech</li>
+          <li>1999 – 1 273 obyvatel ve 327 číslovaných domech</li>
+        </ul>
+
+        <h2>Hospodářství</h2>
+        <p>
+          Historicky se v obci nacházely mlýny, olejny a pily. V roce 1839 vznikla továrna
+          na strojní zařízení, která se později stala součástí železárenského komplexu bratří
+          Kleinů. Provoz byl ukončen v roce 1931. Po roce 1945 se v obci rozvinula výroba
+          jízdních kol pod značkou <strong>Velamos</strong>, jejíž produkce po roce 1990
+          postupně zanikla.
+        </p>
+
+        <h2>Infrastruktura</h2>
+        <p>
+          Vodovod byl vybudován v letech 1992–1997, plynofikace proběhla v letech 2003–2004
+          a kanalizace byla dokončena v roce 2006.
+        </p>
+
+        <h2>Příroda a turistika</h2>
+        <p>
+          Obec je výchozím bodem pro turistické a cyklistické trasy vedoucí do Hrubého Jeseníku.
+          V blízkosti se nacházejí přírodní rezervace a naučné stezky podél řeky Desné.
+          V zimním období jsou okolní svahy vyhledávány lyžaři a milovníky zimní přírody.
+        </p>
+      </article>
+
+      <!-- Stats sidebar -->
+      <aside class="space-y-4">
+        <div class="card p-5">
+          <h3 class="font-semibold text-gray-900 mb-4">Základní informace</h3>
+          <dl class="text-sm space-y-3">
+            {[
+              ['Počet obyvatel', '~ 1 273 (1999)'],
+              ['Nadmořská výška', '365 m n. m.'],
+              ['Nejvyšší bod', 'Petrovský vrch 790 m'],
+              ['Kraj', 'Olomoucký'],
+              ['Okres', 'Šumperk'],
+              ['PSČ', '788 16'],
+              ['IČO', '72054433'],
+              ['Datová schránka', 'c42pa2g'],
+            ].map(([label, value]) => (
+              <div class="flex justify-between gap-2">
+                <dt class="text-gray-500">{label}</dt>
+                <dd class="font-medium text-gray-900 text-right">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <div class="card p-5">
+          <h3 class="font-semibold text-gray-900 mb-3">Symboly obce</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-gray-50 rounded-lg p-4 flex flex-col items-center text-center">
+              <img src="/foto/znak.png" alt="Znak obce Petrov nad Desnou" class="h-16 object-contain mb-2" />
+              <span class="text-xs text-gray-500">Znak obce</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4 flex flex-col items-center text-center">
+              <img src="/foto/vlajka.jpg" alt="Vlajka obce Petrov nad Desnou" class="h-12 object-contain mb-2" />
+              <span class="text-xs text-gray-500">Vlajka obce</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Photo gallery -->
+    <div class="max-w-6xl mx-auto px-4 pb-12">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Fotogalerie</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div class="rounded-xl overflow-hidden h-48 shadow-sm col-span-2 sm:col-span-1">
+          <img src="/foto/panorama.jpg" alt="Panorama obce s hřebenem Jeseníků" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+        </div>
+        <div class="rounded-xl overflow-hidden h-48 shadow-sm">
+          <img src="/foto/obec3.jpg" alt="Pohled na Petrov nad Desnou" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+        </div>
+        <div class="rounded-xl overflow-hidden h-48 shadow-sm">
+          <img src="/foto/kapli-rocha.jpg" alt="Kaplička svatého Rocha" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+        </div>
+        <div class="rounded-xl overflow-hidden h-48 shadow-sm">
+          <img src="/foto/obec1.jpg" alt="Pohled na obec" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+        </div>
+        <div class="rounded-xl overflow-hidden h-48 shadow-sm">
+          <img src="/foto/kapli-ulice.jpg" alt="Kaplička u Petrovské ulice" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+        </div>
+        <div class="rounded-xl overflow-hidden h-48 shadow-sm">
+          <img src="/foto/historicky-pohled.jpg" alt="Historický pohled na Petrov nad Desnou (1904)" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 mt-2">Zdroje: Wikimedia Commons (CC) · petrovnaddesnou.cz</p>
+    </div>
+  </main>
+  <Footer />
+</Base>

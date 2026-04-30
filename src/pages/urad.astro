@@ -1,0 +1,114 @@
+---
+import Base from '@/layouts/Base.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import '@/styles/global.css';
+
+const councilMembers = [
+  { name: 'Bc. Radoslav Matoušek', role: 'Starosta' },
+  { name: 'Lenka Václavská',       role: 'Místostarostka' },
+];
+---
+
+<Base title="Obecní úřad">
+  <Header />
+  <main id="main-content" class="flex-1">
+    <div class="bg-forest-700 text-white py-10">
+      <div class="max-w-6xl mx-auto px-4">
+        <nav class="text-forest-200 text-sm mb-2">
+          <a href="/" class="hover:text-white">Domů</a> / Úřad
+        </nav>
+        <h1 class="text-3xl font-bold">Úřad a samospráva</h1>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div class="lg:col-span-2 space-y-10">
+
+        <!-- Opening hours -->
+        <section>
+          <h2 class="section-title">Úřední hodiny</h2>
+          <div class="card overflow-hidden">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 border-b border-gray-100">
+                <tr>
+                  <th class="text-left px-5 py-3 font-semibold text-gray-700">Den</th>
+                  <th class="text-left px-5 py-3 font-semibold text-gray-700">Dopoledne</th>
+                  <th class="text-left px-5 py-3 font-semibold text-gray-700">Odpoledne</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                {[
+                  ['Pondělí', '8:00 – 12:00', '13:00 – 17:00'],
+                  ['Úterý',   '8:00 – 12:00', '13:00 – 14:30'],
+                  ['Středa',  '8:00 – 12:00', '13:00 – 17:00'],
+                  ['Čtvrtek', '8:00 – 12:00', '13:00 – 14:30'],
+                  ['Pátek',   'Zavřeno',      '—'],
+                ].map(([day, am, pm]) => (
+                  <tr class:list={[am === 'Zavřeno' ? 'text-gray-400' : 'text-gray-700']}>
+                    <td class="px-5 py-3 font-medium">{day}</td>
+                    <td class="px-5 py-3">{am}</td>
+                    <td class="px-5 py-3">{pm}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p class="text-sm text-gray-400 mt-2">Mimo úřední hodiny po předchozí telefonické domluvě.</p>
+        </section>
+
+        <!-- Council members -->
+        <section>
+          <h2 class="section-title">Zastupitelstvo obce</h2>
+          <p class="section-subtitle">Volební období 2022–2026</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {councilMembers.map(({ name, role }) => (
+              <div class="card p-4 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-forest-100 flex items-center justify-center text-forest-700 font-bold text-sm shrink-0">
+                  {name.charAt(0)}
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900 text-sm">{name}</p>
+                  <p class="text-xs text-forest-600">{role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- Meetings -->
+        <section>
+          <h2 class="section-title">Zasedání zastupitelstva</h2>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Zastupitelstvo obce se schází zpravidla jednou za dva měsíce. Zápisy ze zasedání jsou
+            zveřejňovány na úřední desce a v sekci Aktuality. Zasedání jsou veřejná – občané mají
+            právo se účastnit.
+          </p>
+          <a href="/uredni-deska" class="btn-secondary text-sm mt-4 inline-flex">
+            Zápisy ze zasedání →
+          </a>
+        </section>
+      </div>
+
+      <!-- Quick contact sidebar -->
+      <aside class="space-y-4">
+        <div class="card p-5">
+          <h3 class="font-semibold text-gray-900 mb-3">Kontakt na úřad</h3>
+          <address class="not-italic text-sm text-gray-600 space-y-2">
+            <p>Petrov nad Desnou 156<br/>788 16 Petrov nad Desnou</p>
+            <p><a href="tel:+420583284647" class="text-forest-600 hover:text-forest-700">+420 583 284 647</a></p>
+            <p><a href="mailto:podatelna@petrovnaddesnou.cz" class="text-forest-600 hover:text-forest-700">podatelna@petrovnaddesnou.cz</a></p>
+          </address>
+          <a href="/kontakt" class="btn-primary text-sm mt-4 w-full justify-center">Kontaktní stránka</a>
+        </div>
+
+        <div class="card p-5">
+          <h3 class="font-semibold text-gray-900 mb-3">Datová schránka</h3>
+          <p class="text-sm text-gray-600">ID datové schránky:</p>
+          <p class="font-mono text-lg font-bold text-gray-900 mt-1">c42pa2g</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <Footer />
+</Base>

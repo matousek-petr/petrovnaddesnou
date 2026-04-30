@@ -1,0 +1,119 @@
+---
+import Base from '@/layouts/Base.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import '@/styles/global.css';
+
+const documents = [
+  {
+    title: 'Informace o celkovém vyúčtování ceny vodného a stočného v tarifní oblasti VHZ',
+    category: 'Jiný úřad',
+    published: '29. 4. 2026',
+    validTo: '1. 6. 2026',
+    file: 'https://ude.ginis.cloud/petrov-nad-desnou/?id=OPED0B0171VP-0',
+  },
+  {
+    title: 'Veřejná vyhláška – Daň z nemovitých věcí',
+    category: 'Jiný úřad',
+    published: '27. 4. 2026',
+    validTo: '3. 6. 2026',
+    file: 'https://ude.ginis.cloud/petrov-nad-desnou/?id=OPED0B016ZAD-0',
+  },
+  {
+    title: 'Veřejná vyhláška – Pokorný',
+    category: 'Obecní úřad',
+    published: '24. 4. 2026',
+    validTo: '11. 5. 2026',
+    file: 'https://ude.ginis.cloud/petrov-nad-desnou/?id=OPED0B016YOM-0',
+  },
+  {
+    title: 'PUP – stanovení dopravního značení',
+    category: 'Jiný úřad',
+    published: '24. 4. 2026',
+    validTo: '11. 5. 2026',
+    file: 'https://ude.ginis.cloud/petrov-nad-desnou/?id=OPED0B016YXD-0',
+  },
+  {
+    title: 'DS – Oznámení o vyhlášení výběrového řízení a zaslání aukční vyhlášky k vyvěšení na úřední desce',
+    category: 'Jiný úřad',
+    published: '22. 4. 2026',
+    validTo: '12. 5. 2026',
+    file: 'https://ude.ginis.cloud/petrov-nad-desnou/?id=OPED0B016XT4-0',
+  },
+  {
+    title: 'Rozpočtové opatření č. 2/2026',
+    category: 'Obecní úřad',
+    published: '20. 4. 2026',
+    validTo: '20. 5. 2026',
+    file: 'https://ude.ginis.cloud/deska.php?deska=OPEDAWO0A01F',
+  },
+];
+
+const categoryColor: Record<string, string> = {
+  'Obecní úřad': 'bg-forest-100 text-forest-700',
+  'Jiný úřad':   'bg-blue-100 text-blue-700',
+  'Vyhláška':    'bg-red-100 text-red-700',
+};
+---
+
+<Base title="Úřední deska">
+  <Header />
+  <main id="main-content" class="flex-1">
+    <div class="bg-forest-700 text-white py-10">
+      <div class="max-w-6xl mx-auto px-4">
+        <nav class="text-forest-200 text-sm mb-2">
+          <a href="/" class="hover:text-white">Domů</a> / Úřední deska
+        </nav>
+        <h1 class="text-3xl font-bold">Úřední deska</h1>
+        <p class="text-forest-200 mt-1 text-sm">Aktuálně zveřejněné dokumenty a vyhlášky</p>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-12">
+      <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="text-left px-5 py-3 font-semibold text-gray-700">Název dokumentu</th>
+              <th class="text-left px-5 py-3 font-semibold text-gray-700 hidden sm:table-cell">Kategorie</th>
+              <th class="text-left px-5 py-3 font-semibold text-gray-700 hidden md:table-cell">Vyvěšeno</th>
+              <th class="text-left px-5 py-3 font-semibold text-gray-700 hidden md:table-cell">Platí do</th>
+              <th class="px-5 py-3"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            {documents.map(({ title, category, published, validTo, file }) => (
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-5 py-4">
+                  <p class="font-medium text-gray-900">{title}</p>
+                  <p class="text-xs text-gray-400 sm:hidden mt-0.5">{category} · {published}</p>
+                </td>
+                <td class="px-5 py-4 hidden sm:table-cell">
+                  <span class:list={['text-xs font-semibold px-2 py-0.5 rounded-full', categoryColor[category] ?? 'bg-gray-100 text-gray-600']}>
+                    {category}
+                  </span>
+                </td>
+                <td class="px-5 py-4 text-gray-500 hidden md:table-cell">{published}</td>
+                <td class="px-5 py-4 text-gray-500 hidden md:table-cell">{validTo}</td>
+                <td class="px-5 py-4">
+                  <a
+                    href={file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1.5 text-forest-600 hover:text-forest-700 font-medium"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                    Zobrazit
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Base>

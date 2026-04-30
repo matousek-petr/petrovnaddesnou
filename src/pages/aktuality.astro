@@ -1,0 +1,77 @@
+---
+import Base from '@/layouts/Base.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import '@/styles/global.css';
+
+const articles = [
+  {
+    date: '30. 4. 2026', category: 'Oznámení',
+    title: 'Kompost',
+    excerpt: 'Informace pro občany o výdeji/odběru kompostu. Podrobnosti na obecním úřadě.',
+    href: 'https://www.petrovnaddesnou.cz/',
+  },
+  {
+    date: '29. 4. 2026', category: 'Akce',
+    title: 'Ples Majová kytička',
+    excerpt: 'Tradiční obecní ples Majová kytička. Bližší informace budou zveřejněny na úřední desce a webových stránkách obce.',
+    href: 'https://www.petrovnaddesnou.cz/',
+  },
+  {
+    date: '29. 4. 2026', category: 'Oznámení',
+    title: 'Upozornění na uzavírku místní komunikace',
+    excerpt: 'Obecní úřad upozorňuje na plánovanou dočasnou uzavírku místní komunikace. Objízdná trasa bude označena dopravním značením.',
+    href: 'https://www.petrovnaddesnou.cz/',
+  },
+  {
+    date: '28. 4. 2026', category: 'Doprava',
+    title: 'KIDSOK – výlukový jízdní řád linky 215 platný od 4. 5. 2026 do 28. 7. 2026',
+    excerpt: 'Z důvodu uzavírky ve Vikýřovicích platí od 4. května 2026 výlukový jízdní řád autobusové linky 215. Aktuální jízdní řády ke stažení na webu KIDSOK.',
+    href: 'https://www.petrovnaddesnou.cz/kidsok%2Dvylukovy%2Djizdni%2Drad%2Dlinky%2D215%2Dplatne%2Dod%2D4%2D5%2D2026%2Ddo%2D28%2D7%2D2026%2Dsouvisejici%2Ds%2Duzavirkou%2Dve%2Dvikyrovicich/d-5425',
+  },
+  {
+    date: '27. 4. 2026', category: 'Akce',
+    title: 'Slet čarodějnic – Park u skláren Rapotín',
+    excerpt: 'Zveme všechny na Slet čarodějnic pořádaný v parku u skláren v Rapotíně. Akce se koná 30. dubna 2026.',
+    href: 'https://www.petrovnaddesnou.cz/',
+  },
+];
+
+const categoryColors: Record<string, string> = {
+  'Oznámení': 'bg-blue-100 text-blue-700',
+  'Akce': 'bg-amber-100 text-amber-700',
+  'Zastupitelstvo': 'bg-purple-100 text-purple-700',
+};
+---
+
+<Base title="Aktuality">
+  <Header />
+  <main id="main-content" class="flex-1">
+    <div class="bg-forest-700 text-white py-10">
+      <div class="max-w-6xl mx-auto px-4">
+        <nav class="text-forest-200 text-sm mb-2">
+          <a href="/" class="hover:text-white">Domů</a> / Aktuality
+        </nav>
+        <h1 class="text-3xl font-bold">Aktuality</h1>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-12">
+      <div class="max-w-3xl space-y-5">
+        {articles.map(({ date, category, title, excerpt, href }) => (
+          <a href={href} class="card block p-6 hover:border-forest-200">
+            <div class="flex items-center gap-3 mb-2">
+              <span class:list={['text-xs font-semibold px-2 py-0.5 rounded-full', categoryColors[category] ?? 'bg-gray-100 text-gray-600']}>
+                {category}
+              </span>
+              <time class="text-xs text-gray-400">{date}</time>
+            </div>
+            <h2 class="font-semibold text-gray-900 text-lg mb-1">{title}</h2>
+            <p class="text-sm text-gray-500 leading-relaxed">{excerpt}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Base>

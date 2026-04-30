@@ -1,0 +1,77 @@
+---
+const navItems = [
+  { label: 'Obec',              href: '/obec' },
+  { label: 'Úřad',             href: '/urad' },
+  { label: 'Úřední deska',     href: '/uredni-deska' },
+  { label: 'Aktuality',        href: '/aktuality' },
+  { label: 'Život v obci',     href: '/zivot' },
+  { label: 'Kontakt',          href: '/kontakt' },
+];
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo / Name -->
+      <a href="/" class="flex items-center gap-3 group">
+        <img src="/foto/znak.png" alt="Znak obce Petrov nad Desnou" class="w-9 h-9 object-contain shrink-0" />
+        <div class="leading-tight">
+          <div class="font-bold text-gray-900 group-hover:text-forest-700 transition-colors text-sm">Petrov nad Desnou</div>
+          <div class="text-xs text-gray-400">Obec</div>
+        </div>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-1">
+        {navItems.map(({ label, href }) => (
+          <a
+            href={href}
+            class:list={[
+              'px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150',
+              currentPath === href || currentPath.startsWith(href + '/')
+                ? 'bg-forest-50 text-forest-700'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            ]}
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Mobile menu button -->
+      <button
+        id="mobile-menu-btn"
+        class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+        aria-label="Otevřít menu"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white">
+    <nav class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
+      {navItems.map(({ label, href }) => (
+        <a
+          href={href}
+          class:list={[
+            'px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+            currentPath === href ? 'bg-forest-50 text-forest-700' : 'text-gray-700 hover:bg-gray-50'
+          ]}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+</script>

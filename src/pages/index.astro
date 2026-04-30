@@ -1,0 +1,233 @@
+---
+import Base from '@/layouts/Base.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import '@/styles/global.css';
+
+const news = [
+  {
+    date: '30. 4. 2026',
+    title: 'Kompost',
+    excerpt: 'Informace pro občany o výdeji/odběru kompostu. Podrobnosti na obecním úřadě.',
+    href: '/aktuality',
+  },
+  {
+    date: '29. 4. 2026',
+    title: 'Upozornění na uzavírku místní komunikace',
+    excerpt: 'Obecní úřad upozorňuje na plánovanou dočasnou uzavírku místní komunikace. Objízdná trasa bude označena dopravním značením.',
+    href: '/aktuality',
+  },
+  {
+    date: '28. 4. 2026',
+    title: 'KIDSOK – výlukový jízdní řád linky 215 (od 4. 5. do 28. 7. 2026)',
+    excerpt: 'Z důvodu uzavírky ve Vikýřovicích platí od 4. května výlukový jízdní řád linky 215.',
+    href: '/aktuality',
+  },
+];
+
+const events = [
+  { date: '30. 4.', day: 'Čt', title: 'Pálení čarodějnic – Sobotín',    place: 'Park u skláren Rapotín', href: '/zivot#akce' },
+  { date: '8. 5.',  day: 'Pá', title: 'Petrovský den záchranných složek', place: 'Petrov nad Desnou',       href: '/zivot#akce' },
+  { date: '30. 4.', day: 'Čt', title: 'Floria Jaro – zahradnická výstava', place: 'Kroměříž',              href: '/zivot#akce' },
+];
+
+const quickLinks = [
+  { icon: '📋', label: 'Úřední deska',      href: '/uredni-deska',  desc: 'Vyhlášky, oznámení a dokumenty' },
+  { icon: '🗓️', label: 'Akce v obci',       href: '/zivot#akce',    desc: 'Přehled nadcházejících akcí' },
+  { icon: '🏛️', label: 'Obecní úřad',       href: '/urad',          desc: 'Úřední hodiny a kontakty' },
+  { icon: '🗑️', label: 'Odpad',             href: '/zivot#odpad',   desc: 'Svoz a třídění odpadu' },
+  { icon: '🚌', label: 'Doprava',           href: '/zivot#doprava', desc: 'Autobusové spoje a jízdní řády' },
+  { icon: '📞', label: 'Kontakt',           href: '/kontakt',       desc: 'Jak nás kontaktovat' },
+];
+---
+
+<Base title="Úvodní stránka">
+  <Header />
+  <main id="main-content" class="flex-1">
+
+    <!-- Hero -->
+    <section class="relative bg-forest-800 text-white overflow-hidden">
+      <div class="absolute inset-0">
+        <img
+          src="/foto/uvodni-foto.jpg"
+          alt="Pohled na Petrov nad Desnou"
+          class="w-full h-full object-cover"
+          onerror="this.src='/foto/panorama.jpg'"
+        />
+        <div class="absolute inset-0 bg-forest-950/70"></div>
+      </div>
+
+      <div class="relative max-w-6xl mx-auto px-4 py-24 sm:py-32">
+        <div class="max-w-2xl">
+          <p class="text-forest-200 text-sm font-medium uppercase tracking-widest mb-3">Olomoucký kraj · Hrubý Jeseník</p>
+          <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight mb-4">
+            Petrov<br/>nad Desnou
+          </h1>
+          <p class="text-forest-100 text-lg leading-relaxed mb-8 max-w-lg">
+            Malá horská obec na řece Desné v podhůří Hrubého Jeseníku. Vítejte na oficiálních stránkách obce.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="/obec" class="btn-primary bg-white text-forest-800 hover:bg-forest-50">
+              O obci
+            </a>
+            <a href="/kontakt" class="btn-secondary border-white text-white hover:bg-white/10">
+              Kontakt
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick links grid -->
+    <section class="max-w-6xl mx-auto px-4 -mt-8 relative z-10">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        {quickLinks.map(({ icon, label, href, desc }) => (
+          <a
+            href={href}
+            class="card p-4 flex flex-col items-center text-center gap-2 hover:border-forest-200 group"
+          >
+            <span class="text-2xl">{icon}</span>
+            <span class="text-sm font-semibold text-gray-900 group-hover:text-forest-700 transition-colors">{label}</span>
+            <span class="text-xs text-gray-400 leading-tight hidden sm:block">{desc}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Upcoming events strip -->
+    <section class="max-w-6xl mx-auto px-4 mt-10">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="section-title mb-0">Nadcházející akce</h2>
+        <a href="/zivot#akce" class="text-sm text-forest-600 hover:text-forest-700 font-medium">Všechny akce →</a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {events.map(({ date, day, title, place, href }) => (
+          <a href={href} class="card flex items-start gap-4 p-4 hover:border-forest-200">
+            <div class="shrink-0 w-12 text-center bg-forest-50 rounded-lg py-1.5 border border-forest-100">
+              <p class="text-xs text-forest-500 font-medium uppercase">{day}</p>
+              <p class="text-lg font-bold text-forest-700 leading-tight">{date}</p>
+            </div>
+            <div class="min-w-0">
+              <p class="font-semibold text-gray-900 text-sm leading-snug line-clamp-2">{title}</p>
+              <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                </svg>
+                {place}
+              </p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- News + Noticeboard -->
+    <section class="max-w-6xl mx-auto px-4 mt-16 grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+      <!-- News (2/3 width) -->
+      <div class="lg:col-span-2">
+        <h2 class="section-title">Aktuality</h2>
+        <p class="section-subtitle">Nejnovější zprávy z obce</p>
+        <div class="space-y-4">
+          {news.map(({ date, title, excerpt, href }) => (
+            <a href={href} class="card block p-5 hover:border-forest-200">
+              <time class="text-xs font-medium text-forest-600 uppercase tracking-wide">{date}</time>
+              <h3 class="font-semibold text-gray-900 mt-1 mb-2 group-hover:text-forest-700">{title}</h3>
+              <p class="text-sm text-gray-500 leading-relaxed line-clamp-2">{excerpt}</p>
+            </a>
+          ))}
+        </div>
+        <div class="mt-5">
+          <a href="/aktuality" class="btn-secondary text-sm">
+            Všechny aktuality →
+          </a>
+        </div>
+      </div>
+
+      <!-- Sidebar: Úřední deska + Info -->
+      <div class="space-y-6">
+
+        <!-- Úřední deska -->
+        <div>
+          <h2 class="section-title">Úřední deska</h2>
+          <p class="section-subtitle">Aktuálně zveřejněné dokumenty</p>
+          <ul class="space-y-2">
+            {[
+              { title: 'Informace o vyúčtování ceny vodného a stočného', date: '29. 4. 2026' },
+              { title: 'Veřejná vyhláška – Daň z nemovitých věcí', date: '27. 4. 2026' },
+              { title: 'Veřejná vyhláška – Pokorný', date: '24. 4. 2026' },
+            ].map(({ title, date }) => (
+              <li class="flex gap-3 items-start p-3 rounded-lg bg-gray-50 hover:bg-forest-50 transition-colors cursor-pointer">
+                <svg class="w-4 h-4 text-forest-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <div>
+                  <p class="text-sm font-medium text-gray-800 leading-tight">{title}</p>
+                  <p class="text-xs text-gray-400 mt-0.5">{date}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <a href="/uredni-deska" class="text-sm text-forest-600 hover:text-forest-700 font-medium mt-3 inline-block">
+            Celá úřední deska →
+          </a>
+        </div>
+
+        <!-- Opening hours -->
+        <div class="card p-5">
+          <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 text-forest-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Úřední hodiny
+          </h3>
+          <table class="text-sm w-full">
+            <tbody class="divide-y divide-gray-100">
+              {[
+                ['Pondělí', '8:00–12:00', '13:00–17:00'],
+                ['Úterý',   '8:00–12:00', '13:00–14:30'],
+                ['Středa',  '8:00–12:00', '13:00–17:00'],
+                ['Čtvrtek', '8:00–12:00', '13:00–14:30'],
+              ].map(([day, am, pm]) => (
+                <tr>
+                  <td class="py-1.5 font-medium text-gray-700">{day}</td>
+                  <td class="py-1.5 text-gray-500 text-right">{am}</td>
+                  <td class="py-1.5 text-gray-500 text-right">{pm}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p class="text-xs text-gray-400 mt-3">Mimo úřední hodiny po telefonické domluvě.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About teaser -->
+    <section class="bg-forest-50 mt-16 py-16">
+      <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Obec v srdci Jeseníků</h2>
+          <p class="text-gray-600 leading-relaxed mb-4">
+            Petrov nad Desnou je malebná obec rozkládající se v údolí řeky Desné v Hrubém Jeseníku.
+            S přibližně 700 obyvateli nabízí klidné prostředí, čistou přírodu a zázemí pro aktivní
+            odpočinek.
+          </p>
+          <p class="text-gray-600 leading-relaxed mb-6">
+            Obec disponuje základní vybaveností – mateřskou školou, spolkovým životem, sportovišti
+            a přímým napojením na síť turistických a cyklistických tras Jesenicka.
+          </p>
+          <a href="/obec" class="btn-primary">Přečtěte si více o obci</a>
+        </div>
+        <div class="rounded-2xl overflow-hidden h-64 md:h-80 shadow-lg">
+          <img
+            src="/foto/obec2.jpg"
+            alt="Pohled na Petrov nad Desnou"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <Footer />
+</Base>

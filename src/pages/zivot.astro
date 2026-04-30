@@ -1,0 +1,127 @@
+---
+import Base from '@/layouts/Base.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import '@/styles/global.css';
+
+const events = [
+  { date: '30. 4. 2026', title: 'Pálení čarodějnic', place: 'Louka u hasičárny', time: '18:00' },
+  { date: '8. 5. 2026',  title: 'Den záchranářů',    place: 'Areál ZŠ',          time: '10:00' },
+  { date: '14. 6. 2026', title: 'Dětský den',         place: 'Hřiště u školy',   time: '14:00' },
+  { date: '5. 7. 2026',  title: 'Obecní slavnosti',   place: 'Náměstí',          time: '15:00' },
+];
+
+const associations = [
+  { name: 'SDH Petrov nad Desnou',    desc: 'Sbor dobrovolných hasičů',       href: '#' },
+  { name: 'TJ Sokol Petrov',          desc: 'Tělovýchovná jednota',           href: '#' },
+  { name: 'Myslivecký spolek',        desc: 'Ochrana přírody a myslivost',    href: '#' },
+  { name: 'Klub seniorů',             desc: 'Aktivity pro starší spoluobčany', href: '#' },
+];
+---
+
+<Base title="Život v obci">
+  <Header />
+  <main id="main-content" class="flex-1">
+    <div class="bg-forest-700 text-white py-10">
+      <div class="max-w-6xl mx-auto px-4">
+        <nav class="text-forest-200 text-sm mb-2">
+          <a href="/" class="hover:text-white">Domů</a> / Život v obci
+        </nav>
+        <h1 class="text-3xl font-bold">Život v obci</h1>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-12 space-y-14">
+
+      <!-- Events -->
+      <section id="akce">
+        <h2 class="section-title">Nadcházející akce</h2>
+        <p class="section-subtitle">Přehled plánovaných akcí v obci</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {events.map(({ date, title, place, time }) => (
+            <div class="card p-5">
+              <div class="text-xs font-bold text-forest-600 uppercase tracking-wide mb-2">{date}</div>
+              <h3 class="font-semibold text-gray-900 mb-1">{title}</h3>
+              <div class="flex items-center gap-1.5 text-xs text-gray-500 mt-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                {time}
+              </div>
+              <div class="flex items-center gap-1.5 text-xs text-gray-500 mt-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                </svg>
+                {place}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Associations -->
+      <section id="spolky">
+        <h2 class="section-title">Spolky a organizace</h2>
+        <p class="section-subtitle">Aktivní spolkový život v obci</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {associations.map(({ name, desc, href }) => (
+            <a href={href} class="card p-5 flex items-start gap-4 hover:border-forest-200">
+              <div class="w-10 h-10 rounded-lg bg-forest-100 flex items-center justify-center text-forest-600 shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-900">{name}</h3>
+                <p class="text-sm text-gray-500 mt-0.5">{desc}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Waste & transport info -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section id="odpad" class="card p-6">
+          <h2 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <span class="text-xl">🗑️</span> Odpad
+          </h2>
+          <dl class="text-sm space-y-3">
+            {[
+              ['Směsný odpad', 'Každé pondělí'],
+              ['Plast',        'Každé 2 týdny v úterý'],
+              ['Papír',        'Každé 2 týdny ve středu'],
+              ['Sklo',         'Kontejnery u OÚ'],
+              ['Bioodpad',     'Duben – říjen, každý týden'],
+            ].map(([type, schedule]) => (
+              <div class="flex justify-between gap-2 py-2 border-b border-gray-100 last:border-0">
+                <dt class="text-gray-500">{type}</dt>
+                <dd class="font-medium text-gray-900 text-right">{schedule}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        <section id="doprava" class="card p-6">
+          <h2 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <span class="text-xl">🚌</span> Doprava
+          </h2>
+          <p class="text-sm text-gray-600 leading-relaxed mb-4">
+            Obec je napojena na autobusovou linku Šumperk – Rapotín – Petrov nad Desnou.
+            Spoje odjíždějí z autobusové zastávky u obecního úřadu.
+          </p>
+          <a
+            href="https://idos.idnes.cz"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-secondary text-sm"
+          >
+            Jízdní řády IDOS →
+          </a>
+        </section>
+      </div>
+
+    </div>
+  </main>
+  <Footer />
+</Base>

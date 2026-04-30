@@ -1,0 +1,35 @@
+---
+---
+<div
+  id="cookie-banner"
+  class="fixed bottom-0 left-0 right-0 z-50 bg-gray-900 text-gray-200 border-t border-gray-700 shadow-lg hidden"
+  role="region"
+  aria-label="Informace o cookies"
+>
+  <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+    <p class="text-sm flex-1 leading-relaxed">
+      Tento web používá pouze technické cookies nezbytné pro jeho fungování. Nepoužíváme sledovací ani analytické cookies.
+      <a href="/ochrana-osobnich-udaju" class="underline hover:text-white transition-colors ml-1">Více informací</a>
+    </p>
+    <button
+      id="cookie-accept"
+      class="shrink-0 bg-forest-600 hover:bg-forest-500 text-white text-sm font-semibold px-5 py-2 rounded-lg transition-colors whitespace-nowrap"
+    >
+      Rozumím
+    </button>
+  </div>
+</div>
+
+<script>
+  const banner = document.getElementById('cookie-banner');
+  const btn = document.getElementById('cookie-accept');
+
+  if (!localStorage.getItem('cookie-consent')) {
+    banner?.classList.remove('hidden');
+  }
+
+  btn?.addEventListener('click', () => {
+    localStorage.setItem('cookie-consent', '1');
+    banner?.classList.add('hidden');
+  });
+</script>
