@@ -1,28 +1,28 @@
 contacts:
-  - role: "Starosta"
-    name: "Bc. Radoslav Matoušek"
-    phone: "+420 583 283 274"
-    phone2: "+420 778 521 794"
-    email: "starosta@petrovnaddesnou.cz"
-  - role: "Místostarostka"
-    name: "Lenka Václavská"
-    phone: "+420 774 455 490"
-    email: "mistostarosta@petrovnaddesnou.cz"
-  - role: "Referentka"
-    name: "Ivana Dítětová"
-    phone: "+420 583 212 205"
-    phone2: "+420 773 391 210"
-    email: "ivana.ditetova@petrovnaddesnou.cz"
-  - role: "Referentka"
-    name: "Bc. Michaela Žáková"
-    phone: "+420 583 283 275"
-    email: "michaela.zakova@petrovnaddesnou.cz"
-  - role: "Referentka"
-    name: "Bc. Helena Faltusová"
-    phone: "+420 583 285 310"
-    phone2: "+420 778 440 695"
-    email: "helena.faltusova@petrovnaddesnou.cz"
-  - role: "Referentka"
-    name: "Ing. Petra Šindlerová"
-    phone: "+420 583 284 647"
-    email: "petra.sindlerova@petrovnaddesnou.cz"
+  - role: Starosta
+    name: Ing. Petr Matoušek
+    phone: +420 583 283 274
+    phone2: +420 778 521 794
+    email: starosta@petrovnaddesnou.cz
+  - role: Místostarostka
+    name: Lenka Václavská
+    phone: +420 774 455 490
+    email: mistostarosta@petrovnaddesnou.cz
+  - role: Referentka
+    name: Ivana Dítětová
+    phone: +420 583 212 205
+    phone2: +420 773 391 210
+    email: ivana.ditetova@petrovnaddesnou.cz
+  - role: Referentka
+    name: Bc. Michaela Žáková
+    phone: +420 583 283 275
+    email: michaela.zakova@petrovnaddesnou.cz
+  - role: Referentka
+    name: Bc. Helena Faltusová
+    phone: +420 583 285 310
+    phone2: +420 778 440 695
+    email: helena.faltusova@petrovnaddesnou.cz
+  - role: Referentka
+    name: Ing. Petra Šindlerová
+    phone: +420 583 284 647
+    email: petra.sindlerova@petrovnaddesnou.cz
