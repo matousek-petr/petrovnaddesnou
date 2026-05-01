@@ -1,0 +1,415 @@
+---
+import Base from '@/layouts/Base.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import '@/styles/global.css';
+
+const weekdays = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+const hours = Array.from({ length: 12 }, (_, index) => index + 9);
+---
+
+<Base title="Rezervace hřiště" description="Online kalendář rezervací víceúčelového hřiště v Petrově nad Desnou.">
+  <Header />
+  <main id="main-content" class="flex-1">
+    <div class="bg-forest-700 text-white py-10">
+      <div class="max-w-6xl mx-auto px-4">
+        <nav class="text-forest-200 text-sm mb-2">
+          <a href="/" class="hover:text-white">Domů</a> / <a href="/zivot" class="hover:text-white">Život v obci</a> / Rezervace hřiště
+        </nav>
+        <h1 class="text-3xl font-bold">Rezervace víceúčelového hřiště</h1>
+        <p class="text-forest-100 text-sm mt-2 max-w-2xl">
+          Vyberte den a hodinový slot mezi 9:00 a 20:00. Rezervace se ukládají lokálně do tohoto prohlížeče pro testování.
+        </p>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8">
+      <section class="card p-5 md:p-6 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-forest-600">Kalendář</p>
+            <h2 class="text-2xl font-bold text-gray-900" id="month-label"></h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" id="prev-month" class="px-3 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50">←</button>
+            <button type="button" id="today-btn" class="px-3 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50">Dnes</button>
+            <button type="button" id="next-month" class="px-3 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50">→</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400" id="weekday-row">
+          {weekdays.map((day) => <div class="py-1">{day}</div>)}
+        </div>
+
+        <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
+
+        <div class="flex flex-wrap gap-3 text-xs text-gray-500 pt-2">
+          <span class="inline-flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-forest-500"></span> Vybraný den</span>
+          <span class="inline-flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Obsazený den</span>
+          <span>Rezervovat lze po hodinách od 9:00 do 20:00</span>
+        </div>
+      </section>
+
+      <section class="space-y-6">
+        <div class="card p-5 md:p-6">
+          <p class="text-xs font-semibold uppercase tracking-wide text-forest-600">Vybraný den</p>
+          <h2 class="text-2xl font-bold text-gray-900 mt-1" id="selected-date-label"></h2>
+          <p class="text-sm text-gray-500 mt-2" id="selected-date-summary"></p>
+
+          <div class="mt-5">
+            <h3 class="font-semibold text-gray-900 mb-3">Volné hodiny</h3>
+            <div id="slots-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+          </div>
+        </div>
+
+        <div class="card p-5 md:p-6">
+          <h3 class="font-semibold text-gray-900 mb-4">Rezervovat čas</h3>
+          <form id="reservation-form" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1" for="name">Jméno *</label>
+              <input id="name" name="name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent" placeholder="Vaše jméno" />
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="email">Email *</label>
+                <input id="email" name="email" type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent" placeholder="vase@email.cz" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="phone">Telefon</label>
+                <input id="phone" name="phone" type="tel" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent" placeholder="+420..." />
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1" for="note">Poznámka</label>
+              <textarea id="note" name="note" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent resize-none" placeholder="Např. trénink, zápas, setkání..."></textarea>
+            </div>
+
+            <div class="rounded-lg bg-gray-50 border border-gray-200 p-4 text-sm text-gray-600 space-y-1">
+              <p><span class="font-medium text-gray-900">Datum:</span> <span id="form-date-label">-</span></p>
+              <p><span class="font-medium text-gray-900">Čas:</span> <span id="form-hour-label">-</span></p>
+            </div>
+
+            <button type="submit" class="w-full btn-primary justify-center">
+              Uložit rezervaci
+            </button>
+
+            <p id="form-success" class="hidden text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg p-3"></p>
+            <p id="form-error" class="hidden text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg p-3"></p>
+          </form>
+        </div>
+
+        <div class="card p-5 md:p-6">
+          <h3 class="font-semibold text-gray-900 mb-4">Rezervace pro vybraný den</h3>
+          <div id="day-reservations" class="space-y-2"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<script>
+  const STORAGE_KEY = 'petrov-nad-desnou-hriste-reservations';
+  const HOURS = Array.from({ length: 12 }, (_, index) => index + 9);
+  const WEEKDAYS = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+  const MONTHS = [
+    'leden', 'únor', 'březen', 'duben', 'květen', 'červen',
+    'červenec', 'srpen', 'září', 'říjen', 'listopad', 'prosinec',
+  ];
+
+  const monthLabel = document.getElementById('month-label');
+  const calendarGrid = document.getElementById('calendar-grid');
+  const selectedDateLabel = document.getElementById('selected-date-label');
+  const selectedDateSummary = document.getElementById('selected-date-summary');
+  const slotsGrid = document.getElementById('slots-grid');
+  const dayReservations = document.getElementById('day-reservations');
+  const form = document.getElementById('reservation-form');
+  const formDateLabel = document.getElementById('form-date-label');
+  const formHourLabel = document.getElementById('form-hour-label');
+  const formSuccess = document.getElementById('form-success');
+  const formError = document.getElementById('form-error');
+  const prevMonthBtn = document.getElementById('prev-month');
+  const nextMonthBtn = document.getElementById('next-month');
+  const todayBtn = document.getElementById('today-btn');
+
+  const today = startOfDay(new Date());
+  let currentMonth = startOfMonth(today);
+  let selectedDate = startOfDay(today);
+  let selectedHour = null;
+  let reservations = loadReservations();
+
+  function startOfDay(date) {
+    const value = new Date(date);
+    value.setHours(0, 0, 0, 0);
+    return value;
+  }
+
+  function startOfMonth(date) {
+    const value = new Date(date);
+    value.setDate(1);
+    value.setHours(0, 0, 0, 0);
+    return value;
+  }
+
+  function isoDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  function formatLongDate(date) {
+    return new Intl.DateTimeFormat('cs-CZ', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(date);
+  }
+
+  function formatShortDate(date) {
+    return new Intl.DateTimeFormat('cs-CZ', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(date);
+  }
+
+  function loadReservations() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  function saveReservations(nextReservations) {
+    reservations = nextReservations;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextReservations));
+  }
+
+  function reservationsForDate(dateIso) {
+    return reservations
+      .filter((reservation) => reservation.date === dateIso)
+      .sort((a, b) => a.hour - b.hour);
+  }
+
+  function getReservation(dateIso, hour) {
+    return reservations.find((reservation) => reservation.date === dateIso && reservation.hour === hour);
+  }
+
+  function isPastSlot(date, hour) {
+    if (date < today) return true;
+    if (date > today) return false;
+    const nowHour = new Date().getHours();
+    return hour <= nowHour;
+  }
+
+  function renderCalendar() {
+    const firstDay = new Date(currentMonth);
+    const firstWeekday = (firstDay.getDay() + 6) % 7;
+    const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
+    const monthName = MONTHS[currentMonth.getMonth()];
+
+    monthLabel.textContent = `${monthName} ${currentMonth.getFullYear()}`;
+    calendarGrid.innerHTML = '';
+
+    for (let index = 0; index < firstWeekday; index += 1) {
+      const filler = document.createElement('div');
+      filler.className = 'h-24 rounded-xl border border-transparent';
+      calendarGrid.appendChild(filler);
+    }
+
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+      const dateIso = isoDate(date);
+      const dayReservationsCount = reservationsForDate(dateIso).length;
+      const isSelected = dateIso === isoDate(selectedDate);
+      const isToday = dateIso === isoDate(today);
+      const isDisabled = date < today;
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.date = dateIso;
+      button.className = [
+        'h-24 rounded-xl border p-3 text-left transition-all flex flex-col justify-between',
+        isSelected ? 'border-forest-500 bg-forest-50 shadow-sm' : 'border-gray-200 hover:border-forest-200 hover:bg-gray-50',
+        isDisabled ? 'opacity-45' : '',
+      ].join(' ');
+      button.innerHTML = `
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <p class="text-lg font-bold ${isSelected ? 'text-forest-700' : 'text-gray-900'}">${day}</p>
+            <p class="text-xs ${isSelected ? 'text-forest-600' : 'text-gray-500'}">${WEEKDAYS[(date.getDay() + 6) % 7]}</p>
+          </div>
+          ${isToday ? '<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Dnes</span>' : ''}
+        </div>
+        <div class="flex items-center justify-between mt-2">
+          <span class="text-xs ${dayReservationsCount ? 'text-amber-700' : 'text-gray-400'}">${dayReservationsCount ? `${dayReservationsCount} rezervace` : 'Volno'}</span>
+          <span class="w-2.5 h-2.5 rounded-full ${dayReservationsCount ? 'bg-amber-400' : 'bg-gray-200'}"></span>
+        </div>
+      `;
+
+      if (!isDisabled) {
+        button.addEventListener('click', () => {
+          selectedDate = date;
+          selectedHour = null;
+          renderAll();
+        });
+      }
+
+      calendarGrid.appendChild(button);
+    }
+  }
+
+  function renderSlots() {
+    const dateIso = isoDate(selectedDate);
+    const dayItems = reservationsForDate(dateIso);
+
+    selectedDateLabel.textContent = formatLongDate(selectedDate);
+    selectedDateSummary.textContent = dayItems.length
+      ? `Obsazeno ${dayItems.length} z ${HOURS.length} hodin.`
+      : 'Tento den je zatím volný.';
+
+    formDateLabel.textContent = formatShortDate(selectedDate);
+    formHourLabel.textContent = selectedHour ? `${selectedHour}:00` : 'Vyberte čas';
+
+    slotsGrid.innerHTML = '';
+    HOURS.forEach((hour) => {
+      const reservation = getReservation(dateIso, hour);
+      const isBlocked = Boolean(reservation) || isPastSlot(selectedDate, hour);
+      const isSelected = selectedHour === hour;
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = [
+        'rounded-lg border px-3 py-2 text-sm font-medium text-left transition-colors',
+        isSelected ? 'border-forest-500 bg-forest-50 text-forest-700' : 'border-gray-200 bg-white text-gray-700 hover:border-forest-200 hover:bg-gray-50',
+        isBlocked && !isSelected ? 'opacity-55' : '',
+      ].join(' ');
+      button.innerHTML = reservation
+        ? `<span class="block">${hour}:00</span><span class="text-xs text-amber-700">Obsazeno</span>`
+        : isPastSlot(selectedDate, hour)
+          ? `<span class="block">${hour}:00</span><span class="text-xs text-gray-400">Už nelze</span>`
+          : `<span class="block">${hour}:00</span><span class="text-xs text-gray-400">Volno</span>`;
+
+      if (!isBlocked) {
+        button.addEventListener('click', () => {
+          selectedHour = hour;
+          formError.classList.add('hidden');
+          formSuccess.classList.add('hidden');
+          renderAll();
+        });
+      }
+
+      slotsGrid.appendChild(button);
+    });
+  }
+
+  function renderDayReservations() {
+    const dateIso = isoDate(selectedDate);
+    const dayItems = reservationsForDate(dateIso);
+
+    if (!dayItems.length) {
+      dayReservations.innerHTML = '<p class="text-sm text-gray-500">Na vybraný den zatím není nic rezervované.</p>';
+      return;
+    }
+
+    dayReservations.innerHTML = dayItems.map((reservation) => `
+      <div class="rounded-lg border border-gray-200 bg-gray-50 p-3 flex items-start justify-between gap-3">
+        <div>
+          <p class="font-semibold text-gray-900">${reservation.hour}:00 - ${reservation.hour + 1}:00</p>
+          <p class="text-sm text-gray-600">${reservation.name}${reservation.phone ? ` · ${reservation.phone}` : ''}</p>
+          ${reservation.note ? `<p class="text-sm text-gray-500 mt-1">${reservation.note}</p>` : ''}
+        </div>
+        <button type="button" data-delete-id="${reservation.id}" class="text-sm font-medium text-red-600 hover:text-red-700">
+          Zrušit
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function renderAll() {
+    renderCalendar();
+    renderSlots();
+    renderDayReservations();
+  }
+
+  function showMessage(element, text) {
+    element.textContent = text;
+    element.classList.remove('hidden');
+  }
+
+  prevMonthBtn.addEventListener('click', () => {
+    currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
+    renderCalendar();
+  });
+
+  nextMonthBtn.addEventListener('click', () => {
+    currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
+    renderCalendar();
+  });
+
+  todayBtn.addEventListener('click', () => {
+    currentMonth = startOfMonth(today);
+    selectedDate = startOfDay(today);
+    selectedHour = null;
+    renderAll();
+  });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    formError.classList.add('hidden');
+    formSuccess.classList.add('hidden');
+
+    if (selectedHour === null) {
+      showMessage(formError, 'Nejdřív vyberte volný hodinový slot.');
+      return;
+    }
+
+    const dateIso = isoDate(selectedDate);
+    if (getReservation(dateIso, selectedHour)) {
+      showMessage(formError, 'Tento slot je už obsazený. Vyberte jiný čas.');
+      return;
+    }
+
+    const formData = new FormData(form);
+    const name = String(formData.get('name') || '').trim();
+    const email = String(formData.get('email') || '').trim();
+    const phone = String(formData.get('phone') || '').trim();
+    const note = String(formData.get('note') || '').trim();
+
+    const nextReservations = [
+      ...reservations,
+      {
+        id: globalThis.crypto?.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        date: dateIso,
+        hour: selectedHour,
+        name,
+        email,
+        phone,
+        note,
+        createdAt: new Date().toISOString(),
+      },
+    ];
+
+    saveReservations(nextReservations);
+    form.reset();
+    showMessage(formSuccess, `Rezervace byla uložena pro ${formatShortDate(selectedDate)} od ${selectedHour}:00 do ${selectedHour + 1}:00.`);
+    selectedHour = null;
+    renderAll();
+  });
+
+  dayReservations.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+
+    const deleteId = target.dataset.deleteId;
+    if (!deleteId) return;
+
+    saveReservations(reservations.filter((reservation) => reservation.id !== deleteId));
+    renderAll();
+  });
+
+  renderAll();
+</script>

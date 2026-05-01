@@ -20,6 +20,13 @@ const eventTypeColors: Record<string, string> = {
   'Setkání': 'bg-green-100 text-green-700',
   'Administrativa': 'bg-orange-100 text-orange-700',
 };
+
+const associations = [
+  { name: 'SDH Petrov nad Desnou', desc: 'Sbor dobrovolných hasičů', href: '#' },
+  { name: 'TJ Sokol Petrov', desc: 'Tělovýchovná jednota', href: '#' },
+  { name: 'Myslivecký spolek', desc: 'Ochrana přírody a myslivost', href: '#' },
+  { name: 'Klub seniorů', desc: 'Aktivity pro starší spoluobčany', href: '#' },
+];
 ---
 
 <Base title="Život v obci">
@@ -35,6 +42,22 @@ const eventTypeColors: Record<string, string> = {
     </div>
 
     <div class="max-w-6xl mx-auto px-4 py-12 space-y-14">
+
+      <!-- Hřiště -->
+      <section>
+        <div class="card p-6 md:p-7 bg-forest-50 border-forest-100 flex flex-col md:flex-row md:items-center justify-between gap-5">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-forest-600 mb-2">Sportoviště</p>
+            <h2 class="text-2xl font-bold text-gray-900">Rezervace víceúčelového hřiště</h2>
+            <p class="text-sm text-gray-600 mt-2 max-w-2xl">
+              Vyberte si den a hodinový slot mezi 9:00 a 20:00. Rezervační kalendář je připraven pro testování a funguje přímo na webu.
+            </p>
+          </div>
+          <a href="/rezervace-hriste" class="btn-primary whitespace-nowrap">
+            Otevřít kalendář →
+          </a>
+        </div>
+      </section>
 
       <!-- Events -->
       <section id="akce">
@@ -145,6 +168,31 @@ const eventTypeColors: Record<string, string> = {
           </a>
         </section>
       </div>
+
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="card p-6">
+          <h2 class="font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <span class="text-xl">🏟️</span> Víceúčelové hřiště
+          </h2>
+          <p class="text-sm text-gray-600 leading-relaxed mb-4">
+            Pro občany a spolky připravujeme jednoduchý online kalendář rezervací s volnými hodinami od 9:00 do 20:00.
+          </p>
+          <a href="/rezervace-hriste" class="btn-secondary text-sm">
+            Rezervovat hřiště →
+          </a>
+        </div>
+
+        <div class="card p-6">
+          <h2 class="font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <span class="text-xl">ℹ️</span> Provozní doba
+          </h2>
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li>Rezervace: každý den 9:00 – 20:00</li>
+            <li>Rezervace po hodinách</li>
+            <li>Vhodné pro sportovní akce i spolkovou činnost</li>
+          </ul>
+        </div>
+      </section>
 
     </div>
   </main>
