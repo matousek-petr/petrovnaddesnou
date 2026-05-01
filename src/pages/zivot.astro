@@ -94,11 +94,11 @@ const associations = [
             upcomingEvents.map((event) => (
               <div class="card p-5 space-y-3">
                 {event.data.posterImage && (
-                  <div class="overflow-hidden rounded-lg bg-gray-100 aspect-[4/3]">
+                  <div class="overflow-hidden rounded-lg bg-white aspect-[2/3] flex items-center justify-center p-2 border border-gray-100">
                     <img
                       src={event.data.posterImage}
                       alt={`Plakát akce ${event.data.title}`}
-                      class="w-full h-full object-cover"
+                      class="w-full h-full object-contain"
                       loading={event === featuredEvent ? 'eager' : 'lazy'}
                     />
                   </div>
