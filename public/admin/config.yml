@@ -6,7 +6,6 @@ backend:
 site_url: http://localhost:4321
 display_url: http://localhost:4321
 logo_url: /foto/znak.png
-logo_url: /foto/znak.png
 
 # Media folder je pro uploady obrázků
 media_folder: public/uploads
