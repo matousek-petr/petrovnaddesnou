@@ -1,5 +1,4 @@
 const https = require('https');
-const { SITE_URL } = require('./_cms-oauth');
 
 function exchangeCode(code) {
   return new Promise((resolve, reject) => {
@@ -38,22 +37,41 @@ function exchangeCode(code) {
 }
 
 function html(message, content) {
+  // Escape content for safe embedding in JS string
+  const escaped = content.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
   return `<!doctype html>
 <html>
 <head><meta charset="utf-8"><title>CMS přihlášení</title></head>
 <body>
+<p id="msg">Přihlašování...</p>
 <script>
 (function () {
-  function receiveMessage(e) {
-    if (e.origin !== ${JSON.stringify(SITE_URL)}) return;
-    window.removeEventListener('message', receiveMessage, false);
-    window.opener.postMessage(
-      'authorization:github:${message}:${content}',
-      e.origin
-    );
+  var msg = 'authorization:github:${message}:${escaped}';
+  function send(origin) {
+    window.opener.postMessage(msg, origin);
   }
-  window.addEventListener('message', receiveMessage, false);
-  window.opener.postMessage('authorizing:github', '*');
+  if (window.opener) {
+    var received = false;
+    window.addEventListener('message', function handler(e) {
+      if (received) return;
+      received = true;
+      window.removeEventListener('message', handler);
+      send(e.origin);
+      setTimeout(function() { window.close(); }, 500);
+    });
+    // Initiate handshake
+    window.opener.postMessage('authorizing:github', '*');
+    // Fallback: if no response after 2s, send anyway and close
+    setTimeout(function() {
+      if (!received) {
+        received = true;
+        send('*');
+        setTimeout(function() { window.close(); }, 500);
+      }
+    }, 2000);
+  } else {
+    document.getElementById('msg').textContent = 'Chyba: okno nemá opener. Zavři toto okno a zkus znovu.';
+  }
 })();
 </script>
 </body>
