@@ -25,6 +25,10 @@ const recentDocuments = (await getCollection('uredni_deska'))
   .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
   .slice(0, 3);
 
+function getDocumentHref(doc) {
+  return doc.data.sourceUrl ?? doc.data.fileUrl ?? '/uredni-deska';
+}
+
 const quickLinks = [
   { icon: '📋', label: 'Úřední deska',      href: '/uredni-deska',  desc: 'Vyhlášky, oznámení a dokumenty' },
   { icon: '🗓️', label: 'Akce v obci',       href: '/zivot#akce',    desc: 'Přehled nadcházejících akcí' },
@@ -173,7 +177,7 @@ const quickLinks = [
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                   </svg>
                   <div>
-                    <p class="text-sm font-medium text-gray-800 leading-tight">{data.title}</p>
+                    <a href={getDocumentHref({ data })} class="text-sm font-medium text-gray-800 leading-tight hover:text-forest-700 transition-colors">{data.title}</a>
                     <p class="text-xs text-gray-400 mt-0.5">
                       {new Intl.DateTimeFormat('cs-CZ', { day: '2-digit', month: '2-digit' }).format(data.pubDate)}
                     </p>

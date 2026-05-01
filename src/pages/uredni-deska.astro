@@ -4,6 +4,8 @@ import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import { getCollection } from 'astro:content';
 import '@/styles/global.css';
+import fs from 'fs';
+import path from 'path';
 
 // Načtení a seřazení dokumentů (nejnovější nejdřív, archivované poslední)
 const documents = (await getCollection('uredni_deska'))
@@ -15,7 +17,26 @@ const documents = (await getCollection('uredni_deska'))
   });
 
   // Base URL for external Úřední deska host (can be configured via PUBLIC_UDE_BASE_URL)
-  const UDE_BASE = import.meta.env.PUBLIC_UDE_BASE_URL || 'https://ude.ginis.cloud/petrov-nad-desnou';
+  const UDE_BASE = import.meta.env.PUBLIC_UDE_BASE_URL || 'https://ude.ginis.cloud';
+
+  function resolveDocHref(fileUrl) {
+    if (!fileUrl) return null;
+    // absolute URL (external) — use as-is
+    if (!fileUrl.startsWith('/')) return fileUrl;
+
+    const localPath = path.join(process.cwd(), 'public', fileUrl.replace(/^\//, ''));
+    if (fs.existsSync(localPath)) {
+      // serve the local file from /public
+      return fileUrl;
+    }
+
+    // fallback to remote base
+    return `${UDE_BASE}${fileUrl}`;
+  }
+
+  function getDocumentHref(doc) {
+    return resolveDocHref(doc.data.sourceUrl ?? doc.data.fileUrl);
+  }
 
 const categoryColors: Record<string, string> = {
   'Vyhláška': 'bg-red-100 text-red-700',
@@ -58,9 +79,9 @@ const categoryColors: Record<string, string> = {
                     {new Intl.DateTimeFormat('cs-CZ', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(doc.data.pubDate)}
                   </time>
                 </div>
-                {doc.data.fileUrl && (
+                {getDocumentHref(doc) && (
                   <a
-                    href={doc.data.fileUrl?.startsWith('/') ? `${UDE_BASE}${doc.data.fileUrl}` : doc.data.fileUrl}
+                    href={getDocumentHref(doc)}
                     target="_blank"
                     rel="noopener noreferrer"
                     class="shrink-0 inline-flex items-center gap-1 bg-forest-50 text-forest-600 hover:bg-forest-100 px-3 py-2 rounded-lg font-medium text-sm transition-colors"
@@ -68,7 +89,7 @@ const categoryColors: Record<string, string> = {
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                     </svg>
-                    Stáhnout
+                    {doc.data.sourceUrl ? 'Otevřít' : 'Stáhnout'}
                   </a>
                 )}
               </div>

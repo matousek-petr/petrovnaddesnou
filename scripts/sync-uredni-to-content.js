@@ -1,112 +1,131 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const UDE_BASE = process.env.PUBLIC_UDE_BASE_URL || 'https://ude.ginis.cloud/petrov-nad-desnou';
-const SRC_CONTENT = path.join(process.cwd(), 'src', 'content', 'uredni_deska');
+const UDE_BASE = process.env.PUBLIC_UDE_BASE_URL || 'https://ude.ginis.cloud';
+const CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'uredni_deska');
 
-function slugify(input) {
-  return input
+function slugify(value) {
+  return value
     .toLowerCase()
-    .replace(/[áàäâ]/g, 'a')
-    .replace(/[čć]/g, 'c')
-    .replace(/[ď]/g, 'd')
-    .replace(/[éěèë]/g, 'e')
-    .replace(/[íìïî]/g, 'i')
-    .replace(/[ň]/g, 'n')
-    .replace(/[óòöô]/g, 'o')
-    .replace(/[ř]/g, 'r')
-    .replace(/[šß]/g, 's')
-    .replace(/[ť]/g, 't')
-    .replace(/[úùůûü]/g, 'u')
-    .replace(/[ýÿ]/g, 'y')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
 
-async function fetchPage(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-  return await res.text();
+function stripTags(value) {
+  return value.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-function parseDate(text) {
-  // Expect formats like "01. 05. 2026" or "1. 5. 2026"
-  const m = text.match(/(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})/);
-  if (!m) return null;
-  const [ , d, mth, y ] = m;
-  return `${y}-${String(mth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+function parseDate(value) {
+  const match = value.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+  if (!match) return null;
+  const [, day, month, year] = match;
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 }
 
-function ensureDir(dir) {
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-}
+function parseRows(html) {
+  const tbodyMatch = html.match(/<tbody class="gov-table__body">([\s\S]*?)<\/tbody>/i);
+  if (!tbodyMatch) return [];
 
-function writeIfChanged(filePath, content) {
-  if (fs.existsSync(filePath)) {
-    const old = fs.readFileSync(filePath, 'utf8');
-    if (old === content) return 'unchanged';
+  const tbody = tbodyMatch[1];
+  const today = new Date().toISOString().slice(0, 10);
+  const rowRe = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+  const rows = [];
+  let rowMatch;
+
+  while ((rowMatch = rowRe.exec(tbody)) !== null) {
+    const rowHtml = rowMatch[1];
+    const cells = rowHtml.match(/<td[^>]*>[\s\S]*?<\/td>/gi) || [];
+    if (cells.length < 5) continue;
+
+    const referenceCell = cells[0];
+    const titleCell = cells[1];
+    const fromCell = cells[3];
+    const toCell = cells[4];
+
+    const referenceMatches = [...referenceCell.matchAll(/\stitle="([^"]+)"/g)];
+    const reference = stripTags(referenceMatches.at(-1)?.[1] || referenceCell);
+    const titleMatch = titleCell.match(/<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/i);
+    if (!titleMatch) continue;
+
+    const detailHref = titleMatch[1];
+    const title = stripTags(titleMatch[2]);
+    const sourceUrl = new URL(detailHref, `${UDE_BASE}/`).href;
+    const url = new URL(sourceUrl);
+    const category = decodeURIComponent(url.searchParams.get('kategorie') || 'Úřední oznámení');
+    const pubDate = parseDate(stripTags(fromCell));
+    const endDateText = stripTags(toCell);
+    const endDate = parseDate(endDateText);
+    const isArchived = Boolean(endDate && endDate < today);
+
+    rows.push({
+      reference,
+      title,
+      category,
+      pubDate: pubDate || '2026-05-01',
+      endDate,
+      sourceUrl,
+      isArchived,
+    });
   }
-  fs.writeFileSync(filePath, content, 'utf8');
-  return 'written';
+
+  return rows;
 }
 
-function extractItems(html) {
-  // Parse repeated document cards: look for <div class="card" ...> ... </div>
-  // For each card extract category (first span), title (h2), date (time), href (first .pdf anchor in the card)
-  const cardRe = /<div[^>]*class="[^"]*card[^"]*"[\s\S]*?<\/div>\s*<\/div>|<div[^>]*class="[^"]*card[^"]*"[\s\S]*?<\/div>/gi;
-  const matches = [];
-  let m;
-  while ((m = cardRe.exec(html)) !== null) {
-    const card = m[0];
-    const catMatch = card.match(/<span[^>]*>([^<]+)<\/span>/i);
-    const titleMatch = card.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
-    const timeMatch = card.match(/<time[^>]*>([\s\S]*?)<\/time>/i);
-    const hrefMatch = card.match(/<a[^>]+href=["']([^"']+\.pdf)["'][^>]*>/i);
-    const title = titleMatch ? titleMatch[1].replace(/<[^>]+>/g,'').trim() : null;
-    const category = catMatch ? catMatch[1].trim() : null;
-    const dateText = timeMatch ? timeMatch[1].trim() : null;
-    const href = hrefMatch ? hrefMatch[1].trim() : null;
-    if (title && href) {
-      matches.push({ title, category, dateText, href });
-    }
-  }
-  return matches;
+function toFrontmatter(data) {
+  const lines = [
+    '---',
+    `title: ${JSON.stringify(data.title)}`,
+    `pubDate: ${data.pubDate}`,
+    `category: ${JSON.stringify(data.category)}`,
+    `reference: ${JSON.stringify(data.reference)}`,
+    `sourceUrl: ${JSON.stringify(data.sourceUrl)}`,
+    `isArchived: ${data.isArchived ? 'true' : 'false'}`,
+    '---',
+    '',
+  ];
+  return lines.join('\n');
 }
 
 async function run() {
-  ensureDir(SRC_CONTENT);
-  console.log(`Fetching ${UDE_BASE}/`);
-  const html = await fetchPage(UDE_BASE + '/');
-  const items = extractItems(html);
+  if (!fs.existsSync(CONTENT_DIR)) {
+    fs.mkdirSync(CONTENT_DIR, { recursive: true });
+  }
+
+  const response = await fetch(`${UDE_BASE}/deska.php?deska=OPEDAWO0A01F&format=json`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch board: HTTP ${response.status}`);
+  }
+
+  const html = await response.text();
+  const items = parseRows(html);
   console.log(`Found ${items.length} items`);
-  for (const it of items) {
-    const date = it.dateText ? parseDate(it.dateText) : null;
-    const basename = path.basename(it.href);
-    const fileUrl = `/dokumenty/${basename}`;
-    const slugBase = slugify(it.title || basename.replace(/\.pdf$/i,''));
-    let filename = `${slugBase}.md`;
-    // avoid collisions
-    let i = 1;
-    while (fs.existsSync(path.join(SRC_CONTENT, filename))) {
-      // read existing and compare title
-      const existing = fs.readFileSync(path.join(SRC_CONTENT, filename), 'utf8');
-      if (existing.includes(`title: ${it.title}`)) break; // same
-      filename = `${slugBase}-${i}.md`;
-      i++;
+
+  for (const file of fs.readdirSync(CONTENT_DIR)) {
+    if (file.endsWith('.md')) {
+      fs.unlinkSync(path.join(CONTENT_DIR, file));
     }
-    const front = {
-      title: it.title,
-      pubDate: date || new Date().toISOString().slice(0,10),
-      category: it.category || 'Úřední oznámení',
-      fileUrl
-    };
-    const md = `---\n${Object.entries(front).map(([k,v]) => `${k}: ${v}`).join('\n')}\n---\n\n` + (it.title ? `# ${it.title}\n\n` : '') + `Původní dokument: ${UDE_BASE}${it.href}\n`;
-    const outPath = path.join(SRC_CONTENT, filename);
-    const res = writeIfChanged(outPath, md);
-    console.log(`${filename}: ${res}`);
+  }
+
+  for (const item of items) {
+    const filename = `${slugify(`${item.reference}-${item.title}`)}.md`;
+    const body = [
+      toFrontmatter(item),
+      `# ${item.title}`,
+      '',
+      `Původní dokument: [Otevřít na úřední desce](${item.sourceUrl})`,
+      '',
+      item.endDate ? `Zobrazeno do: ${item.endDate}` : 'Zobrazeno do: bez omezení',
+      '',
+    ].join('\n');
+
+    fs.writeFileSync(path.join(CONTENT_DIR, filename), body, 'utf8');
+    console.log(`Wrote ${filename}`);
   }
 }
 
-run().catch(err => { console.error(err); process.exit(1); });
+run().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

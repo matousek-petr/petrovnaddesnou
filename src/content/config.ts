@@ -33,8 +33,10 @@ const uredniDeskaCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     pubDate: z.coerce.date(),
-    category: z.enum(['Vyhláška', 'Úřední oznámení', 'Zápis ze zasedání', 'Výběrové řízení']),
+    category: z.string(),
+    reference: z.string().optional(),
     fileUrl: z.string().optional(), // URL na PDF
+    sourceUrl: z.string().optional(), // URL na detail dokumentu v UDE
     isArchived: z.boolean().default(false),
   }),
 });
