@@ -14,6 +14,9 @@ const documents = (await getCollection('uredni_deska'))
     return a.data.isArchived ? 1 : -1;
   });
 
+  // Base URL for external Úřední deska host (can be configured via PUBLIC_UDE_BASE_URL)
+  const UDE_BASE = import.meta.env.PUBLIC_UDE_BASE_URL || 'https://ude.ginis.cloud/petrov-nad-desnou';
+
 const categoryColors: Record<string, string> = {
   'Vyhláška': 'bg-red-100 text-red-700',
   'Úřední oznámení': 'bg-blue-100 text-blue-700',
@@ -57,7 +60,7 @@ const categoryColors: Record<string, string> = {
                 </div>
                 {doc.data.fileUrl && (
                   <a
-                    href={doc.data.fileUrl?.startsWith('/') ? `https://ude.ginis.cz${doc.data.fileUrl}` : doc.data.fileUrl}
+                    href={doc.data.fileUrl?.startsWith('/') ? `${UDE_BASE}${doc.data.fileUrl}` : doc.data.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     class="shrink-0 inline-flex items-center gap-1 bg-forest-50 text-forest-600 hover:bg-forest-100 px-3 py-2 rounded-lg font-medium text-sm transition-colors"

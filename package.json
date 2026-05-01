@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "sync:uredni": "node ./scripts/sync-uredni-deska.js"
   },
   "dependencies": {
     "@astrojs/tailwind": "^5.1.4",
