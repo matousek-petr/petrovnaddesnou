@@ -2,12 +2,15 @@
 import Base from '@/layouts/Base.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import { getEntry } from 'astro:content';
 import '@/styles/global.css';
 
-const councilMembers = [
-  { name: 'Bc. Radoslav Matoušek', role: 'Starosta' },
-  { name: 'Lenka Václavská',       role: 'Místostarostka' },
-];
+const zastupitele = await getEntry('zastupitele', 'seznam');
+const nastaveni = await getEntry('nastaveni', 'uredni-hodiny');
+const members = zastupitele.data.members;
+const volebnObdobi = zastupitele.data.volebnObdobi;
+const officeHours = nastaveni.data.hours;
+const officeNote = nastaveni.data.note;
 ---
 
 <Base title="Obecní úřad">
@@ -25,7 +28,6 @@ const councilMembers = [
     <div class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
       <div class="lg:col-span-2 space-y-10">
 
-        <!-- Opening hours -->
         <section>
           <h2 class="section-title">Úřední hodiny</h2>
           <div class="card overflow-hidden">
@@ -38,13 +40,7 @@ const councilMembers = [
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-100">
-                {[
-                  ['Pondělí', '8:00 – 12:00', '13:00 – 17:00'],
-                  ['Úterý',   '8:00 – 12:00', '13:00 – 14:30'],
-                  ['Středa',  '8:00 – 12:00', '13:00 – 17:00'],
-                  ['Čtvrtek', '8:00 – 12:00', '13:00 – 14:30'],
-                  ['Pátek',   'Zavřeno',      '—'],
-                ].map(([day, am, pm]) => (
+                {officeHours.map(({ day, am, pm }) => (
                   <tr class:list={[am === 'Zavřeno' ? 'text-gray-400' : 'text-gray-700']}>
                     <td class="px-5 py-3 font-medium">{day}</td>
                     <td class="px-5 py-3">{am}</td>
@@ -54,15 +50,14 @@ const councilMembers = [
               </tbody>
             </table>
           </div>
-          <p class="text-sm text-gray-400 mt-2">Mimo úřední hodiny po předchozí telefonické domluvě.</p>
+          {officeNote && <p class="text-sm text-gray-400 mt-2">{officeNote}</p>}
         </section>
 
-        <!-- Council members -->
         <section>
           <h2 class="section-title">Zastupitelstvo obce</h2>
-          <p class="section-subtitle">Volební období 2022–2026</p>
+          <p class="section-subtitle">Volební období {volebnObdobi}</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {councilMembers.map(({ name, role }) => (
+            {members.map(({ name, role }) => (
               <div class="card p-4 flex items-center gap-3">
                 <div class="w-9 h-9 rounded-full bg-forest-100 flex items-center justify-center text-forest-700 font-bold text-sm shrink-0">
                   {name.charAt(0)}
@@ -76,7 +71,6 @@ const councilMembers = [
           </div>
         </section>
 
-        <!-- Meetings -->
         <section>
           <h2 class="section-title">Zasedání zastupitelstva</h2>
           <p class="text-sm text-gray-600 leading-relaxed">
@@ -90,7 +84,6 @@ const councilMembers = [
         </section>
       </div>
 
-      <!-- Quick contact sidebar -->
       <aside class="space-y-4">
         <div class="card p-5">
           <h3 class="font-semibold text-gray-900 mb-3">Kontakt na úřad</h3>

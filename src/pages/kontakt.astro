@@ -2,16 +2,14 @@
 import Base from '@/layouts/Base.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import { getEntry } from 'astro:content';
 import '@/styles/global.css';
 
-const contacts = [
-  { role: 'Starosta', name: 'Bc. Radoslav Matoušek', phone: '+420 583 283 274', phone2: '+420 778 521 794', email: 'starosta@petrovnaddesnou.cz' },
-  { role: 'Místostarostka', name: 'Lenka Václavská', phone: '+420 774 455 490', email: 'mistostarosta@petrovnaddesnou.cz' },
-  { role: 'Referentka', name: 'Ivana Dítětová', phone: '+420 583 212 205', phone2: '+420 773 391 210', email: 'ivana.ditetova@petrovnaddesnou.cz' },
-  { role: 'Referentka', name: 'Bc. Michaela Žáková', phone: '+420 583 283 275', email: 'michaela.zakova@petrovnaddesnou.cz' },
-  { role: 'Referentka', name: 'Bc. Helena Faltusová', phone: '+420 583 285 310', phone2: '+420 778 440 695', email: 'helena.faltusova@petrovnaddesnou.cz' },
-  { role: 'Referentka', name: 'Ing. Petra Šindlerová', phone: '+420 583 284 647', email: 'petra.sindlerova@petrovnaddesnou.cz' },
-];
+const zamestnanci = await getEntry('zamestnanci', 'seznam');
+const nastaveni = await getEntry('nastaveni', 'uredni-hodiny');
+const contacts = zamestnanci.data.contacts;
+const officeHours = nastaveni.data.hours;
+const officeNote = nastaveni.data.note;
 ---
 
 <Base title="Kontakt">
@@ -28,7 +26,6 @@ const contacts = [
 
     <div class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 gap-10">
 
-      <!-- Contact info -->
       <div class="space-y-8">
         <div>
           <h2 class="section-title">Obecní úřad</h2>
@@ -55,33 +52,26 @@ const contacts = [
           </address>
         </div>
 
-        <!-- Hours -->
         <div class="card p-5">
           <h3 class="font-semibold text-gray-900 mb-3">Úřední hodiny</h3>
           <table class="text-sm w-full">
             <tbody class="divide-y divide-gray-100">
-              {[
-                ['Pondělí', '8:00 – 12:00', '13:00 – 17:00'],
-                ['Úterý',   '8:00 – 12:00', '13:00 – 14:30'],
-                ['Středa',  '8:00 – 12:00', '13:00 – 17:00'],
-                ['Čtvrtek', '8:00 – 12:00', '13:00 – 14:30'],
-              ].map(([day, am, pm]) => (
+              {officeHours.map(({ day, am, pm }) => (
                 <tr>
                   <td class="py-2 font-medium text-gray-700 w-28">{day}</td>
                   <td class="py-2 text-gray-500">{am}</td>
                   <td class="py-2 text-gray-500">{pm}</td>
                 </tr>
               ))}
-              <tr>
-                <td class="py-2 text-gray-400 text-xs" colspan="3">
-                  Mimo úřední hodiny po telefonické domluvě.
-                </td>
-              </tr>
+              {officeNote && (
+                <tr>
+                  <td class="py-2 text-gray-400 text-xs" colspan="3">{officeNote}</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
 
-        <!-- Staff -->
         <div>
           <h2 class="section-title">Zaměstnanci</h2>
           <div class="mt-3 space-y-3">
@@ -102,69 +92,30 @@ const contacts = [
         </div>
       </div>
 
-      <!-- Contact form + map -->
       <div class="space-y-10">
         <div>
           <h2 class="section-title">Napište nám</h2>
           <form action="https://formspree.io/f/mzbnozdb" method="POST" class="mt-3 space-y-4">
-          <div>
-            <label for="name" class="block font-medium text-gray-700 mb-1">Jméno *</label>
-            <input 
-              type="text" 
-              id="name" 
-              name="name" 
-              required 
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg hover:border-forest-400 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent"
-              placeholder="Vaše jméno"
-            />
-          </div>
-
-          <div>
-            <label for="email" class="block font-medium text-gray-700 mb-1">Email *</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              required 
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg hover:border-forest-400 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent"
-              placeholder="vase@email.cz"
-            />
-          </div>
-
-          <div>
-            <label for="subject" class="block font-medium text-gray-700 mb-1">Předmět *</label>
-            <input 
-              type="text" 
-              id="subject" 
-              name="subject" 
-              required 
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg hover:border-forest-400 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent"
-              placeholder="Předmět zprávy"
-            />
-          </div>
-
-          <div>
-            <label for="message" class="block font-medium text-gray-700 mb-1">Zpráva *</label>
-            <textarea 
-              id="message" 
-              name="message" 
-              required 
-              rows="5"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg hover:border-forest-400 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent resize-none"
-              placeholder="Vaše zpráva..."
-            ></textarea>
-          </div>
-
-          <button 
-            type="submit"
-            class="w-full bg-forest-600 hover:bg-forest-700 text-white font-semibold py-2.5 rounded-lg transition-colors duration-200"
-          >
-            ✉️ Odeslat zprávu
-          </button>
-          
-          <p class="text-xs text-gray-500 mt-2">
-            Vaše údaje se nebudou využívat k jiným účelům a nebudeme je předávat třetím stranám.
-          </p>
+            <div>
+              <label for="name" class="block font-medium text-gray-700 mb-1">Jméno *</label>
+              <input type="text" id="name" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg hover:border-forest-400 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent" placeholder="Vaše jméno" />
+            </div>
+            <div>
+              <label for="email" class="block font-medium text-gray-700 mb-1">Email *</label>
+              <input type="email" id="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg hover:border-forest-400 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent" placeholder="vase@email.cz" />
+            </div>
+            <div>
+              <label for="subject" class="block font-medium text-gray-700 mb-1">Předmět *</label>
+              <input type="text" id="subject" name="subject" required class="w-full px-3 py-2 border border-gray-300 rounded-lg hover:border-forest-400 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent" placeholder="Předmět zprávy" />
+            </div>
+            <div>
+              <label for="message" class="block font-medium text-gray-700 mb-1">Zpráva *</label>
+              <textarea id="message" name="message" required rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-lg hover:border-forest-400 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent resize-none" placeholder="Vaše zpráva..."></textarea>
+            </div>
+            <button type="submit" class="w-full bg-forest-600 hover:bg-forest-700 text-white font-semibold py-2.5 rounded-lg transition-colors duration-200">
+              ✉️ Odeslat zprávu
+            </button>
+            <p class="text-xs text-gray-500 mt-2">Vaše údaje se nebudou využívat k jiným účelům a nebudeme je předávat třetím stranám.</p>
           </form>
         </div>
 
@@ -182,12 +133,7 @@ const contacts = [
           </div>
           <div class="flex items-center justify-between mt-2">
             <p class="text-xs text-gray-400">IČO: 72054433 · Nejsme plátci DPH · DS: c42pa2g</p>
-            <a
-              href="https://www.openstreetmap.org/?mlat=50.0163744&mlon=17.0648881#map=15/50.0163744/17.0648881"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-xs text-forest-600 hover:text-forest-700 font-medium"
-            >
+            <a href="https://www.openstreetmap.org/?mlat=50.0163744&mlon=17.0648881#map=15/50.0163744/17.0648881" target="_blank" rel="noopener noreferrer" class="text-xs text-forest-600 hover:text-forest-700 font-medium">
               Otevřít ve větší mapě →
             </a>
           </div>

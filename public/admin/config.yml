@@ -4,24 +4,21 @@ backend:
   branch: main
   base_url: https://petrovnaddesnou.vercel.app
   auth_endpoint: api/auth
-  
+
 site_url: https://petrovnaddesnou.vercel.app
 display_url: https://petrovnaddesnou.vercel.app
 logo_url: /foto/znak.png
 
-# Media folder je pro uploady obrázků
 media_folder: public/uploads
 public_path: /uploads
 
-# Timezone
 i18n:
   structure: single_file
   locales: [cs]
   default_locale: cs
 
-# Kolekce obsahu
 collections:
-  # Aktuality
+  # ── OBSAH ──────────────────────────────────────────────
   - name: aktuality
     label: Aktuality
     label_singular: Aktualita
@@ -37,7 +34,6 @@ collections:
       - { label: Autor, name: author, widget: string, required: false }
       - { label: Obsah, name: body, widget: markdown }
 
-  # Akce
   - name: udalosti
     label: Akce v obci
     label_singular: Akce
@@ -52,11 +48,10 @@ collections:
       - { label: Místo, name: location, widget: string }
       - { label: Popis, name: description, widget: text }
       - { label: Typ akce, name: eventType, widget: select, options: [Kultura, Sport, Setkání, Administrativa], required: false }
-      - { label: Plakát, name: posterImage, widget: image, required: false, hint: "Nahraj plakát nebo zkopíruj cestu k obrázku" }
-      - { label: Featured (zobrazit na homepage), name: isFeatured, widget: boolean, default: false }
+      - { label: Plakát, name: posterImage, widget: image, required: false }
+      - { label: Zobrazit na homepage, name: isFeatured, widget: boolean, default: false }
       - { label: Obsah, name: body, widget: markdown, required: false }
 
-  # Občasník
   - name: obcasnik
     label: Občasník
     label_singular: Číslo občasníku
@@ -68,9 +63,8 @@ collections:
       - { label: Nadpis, name: title, widget: string, hint: "Např. Občasník č. 56 – červen 2026" }
       - { label: Číslo, name: number, widget: number, value_type: int }
       - { label: Datum vydání, name: pubDate, widget: datetime }
-      - { label: PDF soubor, name: fileUrl, widget: file, media_folder: /public/dokumenty, public_folder: /dokumenty, hint: "Nahraj PDF občasníku" }
+      - { label: PDF soubor, name: fileUrl, widget: file, media_folder: /public/dokumenty, public_folder: /dokumenty }
 
-  # Úřední deska
   - name: uredni_deska
     label: Úřední deska
     label_singular: Dokument
@@ -81,9 +75,113 @@ collections:
     fields:
       - { label: Název dokumentu, name: title, widget: string }
       - { label: Datum zveřejnění, name: pubDate, widget: datetime }
-      - { label: Kategorie, name: category, widget: string, hint: "Např. Informace z obecního úřadu, Ekonomika obce, Veřejné zakázky" }
-      - { label: Číslo jednací / reference, name: reference, widget: string, required: false }
+      - { label: Kategorie, name: category, widget: string, hint: "Např. Informace z OÚ, Ekonomika obce, Veřejné zakázky" }
+      - { label: Číslo jednací, name: reference, widget: string, required: false }
       - { label: URL na PDF, name: fileUrl, widget: string, required: false }
       - { label: URL na detail dokumentu, name: sourceUrl, widget: string, required: false }
       - { label: Archivováno, name: isArchived, widget: boolean, default: false }
       - { label: Obsah, name: body, widget: markdown, required: false }
+
+  # ── LÉKAŘI ─────────────────────────────────────────────
+  - name: lekari
+    label: Lékaři a ambulance
+    label_singular: Lékař / ambulance
+    folder: src/content/lekari
+    create: true
+    slug: "{{slug}}"
+    format: yaml
+    extension: yaml
+    fields:
+      - { label: Název / jméno lékaře, name: title, widget: string }
+      - { label: Telefon, name: phone, widget: string }
+      - { label: Adresa, name: address, widget: string }
+      - { label: Datum aktualizace, name: updated, widget: string, hint: "Např. 1. 1. 2025" }
+      - name: hours
+        label: Ordinační hodiny
+        widget: list
+        fields:
+          - { label: Den, name: day, widget: string, hint: "Pondělí, Úterý…" }
+          - name: slots
+            label: Časy ordinace
+            widget: list
+            field: { label: Čas, name: slot, widget: string }
+
+  # ── DATA WEBU (singleton soubory) ──────────────────────
+  - name: data-webu
+    label: Data webu
+    files:
+      - name: zamestnanci
+        label: Zaměstnanci OÚ
+        file: src/content/zamestnanci/seznam.yaml
+        format: yaml
+        fields:
+          - name: contacts
+            label: Zaměstnanci
+            widget: list
+            fields:
+              - { label: Funkce, name: role, widget: string }
+              - { label: Jméno, name: name, widget: string }
+              - { label: Telefon, name: phone, widget: string }
+              - { label: "Telefon 2 (volitelný)", name: phone2, widget: string, required: false }
+              - { label: Email, name: email, widget: string }
+
+      - name: zastupitele
+        label: Zastupitelé obce
+        file: src/content/zastupitele/seznam.yaml
+        format: yaml
+        fields:
+          - { label: Volební období, name: volebnObdobi, widget: string, hint: "Např. 2022–2026" }
+          - name: members
+            label: Zastupitelé
+            widget: list
+            fields:
+              - { label: Jméno, name: name, widget: string }
+              - { label: Funkce, name: role, widget: string }
+
+      - name: spolky
+        label: Spolky a organizace
+        file: src/content/spolky/seznam.yaml
+        format: yaml
+        fields:
+          - name: items
+            label: Spolky
+            widget: list
+            fields:
+              - { label: Název, name: name, widget: string }
+              - { label: Popis, name: desc, widget: string }
+              - { label: Web (URL), name: href, widget: string, required: false }
+
+      - name: uredni-hodiny
+        label: Úřední hodiny OÚ
+        file: src/content/nastaveni/uredni-hodiny.yaml
+        format: yaml
+        fields:
+          - { label: Poznámka pod tabulkou, name: note, widget: string, required: false }
+          - name: hours
+            label: Hodiny
+            widget: list
+            fields:
+              - { label: Den, name: day, widget: string }
+              - { label: Dopoledne, name: am, widget: string }
+              - { label: Odpoledne, name: pm, widget: string }
+
+      - name: odpad
+        label: Svoz odpadu
+        file: src/content/nastaveni/odpad.yaml
+        format: yaml
+        fields:
+          - name: items
+            label: Druhy odpadu
+            widget: list
+            fields:
+              - { label: Druh odpadu, name: type, widget: string }
+              - { label: Harmonogram, name: schedule, widget: string }
+
+      - name: o-obci
+        label: Stránka „O obci" – text
+        file: src/content/stranky/o-obci.md
+        format: yaml-frontmatter
+        fields:
+          - { label: Nadpis, name: title, widget: string }
+          - { label: Popis (meta), name: description, widget: string, required: false }
+          - { label: Obsah stránky, name: body, widget: markdown }

@@ -1,0 +1,29 @@
+title: "Praktický lékař MUDr. Jan Ježek"
+phone: "583 242 455"
+address: "Nám. Svobody 690, 788 14 Rapotín"
+updated: "16. 6. 2023"
+hours:
+  - day: "Pondělí"
+    slots:
+      - "7:30 – 8:30 odběry krve, ordinace - hodnocení INR"
+      - "8:30 – 11:00 ordinace (bez objednání)"
+      - "11:00 – 14:00 prohlídky - prevence, zaměstnání, ŘP (pozvaní/objednaní pacienti)"
+  - day: "Úterý"
+    slots:
+      - "13:00 – 16:00 ordinace (bez objednání)"
+      - "16:00 – 18:00 objednaní pacienti"
+  - day: "Středa"
+    slots:
+      - "8:00 – 9:00 odběry krve, ordinace - hodnocení INR"
+      - "9:00 – 11:30 ordinace (bez objednání)"
+      - "11:30 – 14:00 prohlídky objednaných pacientů"
+  - day: "Čtvrtek"
+    slots:
+      - "8:00 – 9:30 ordinace (bez objednání)"
+      - "9:30 – 11:00 posudky"
+      - "11:00 – 14:00 objednaní pacienti"
+  - day: "Pátek"
+    slots:
+      - "7:30 – 8:30 odběry krve, ordinace - hodnocení INR"
+      - "8:30 – 11:00 ordinace (bez objednání)"
+      - "11:00 – 14:00 prohlídky - prevence, zaměstnání, ŘP (pozvaní/objednaní pacienti)"

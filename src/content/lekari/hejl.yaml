@@ -1,0 +1,21 @@
+title: "Praktický lékař pro děti a dorost MUDr. František Hejl"
+phone: "583 283 213 / 583 241 085"
+address: "Nám. Svobody 690, 788 14 Rapotín / Nový Malín"
+updated: "16. 6. 2023"
+hours:
+  - day: "Pondělí"
+    slots:
+      - "10:00 – 13:00"
+  - day: "Úterý"
+    slots:
+      - "7:30 – 9:30"
+      - "10:00 – 12:00 poradna pro kojence"
+  - day: "Středa"
+    slots:
+      - "7:30 – 11:00"
+  - day: "Čtvrtek"
+    slots:
+      - "13:00 – 15:00"
+  - day: "Pátek"
+    slots:
+      - "10:00 – 13:00"

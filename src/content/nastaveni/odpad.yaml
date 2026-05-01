@@ -1,0 +1,11 @@
+items:
+  - type: "Směsný odpad"
+    schedule: "Každé pondělí"
+  - type: "Plast"
+    schedule: "Každé 2 týdny v úterý"
+  - type: "Papír"
+    schedule: "Každé 2 týdny ve středu"
+  - type: "Sklo"
+    schedule: "Kontejnery u OÚ"
+  - type: "Bioodpad"
+    schedule: "Duben – říjen, každý týden"

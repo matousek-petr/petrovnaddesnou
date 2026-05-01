@@ -1,0 +1,12 @@
+title: "Gynekologická ambulance MUDr. Michaela Potěšilová"
+phone: "739 096 078"
+address: "Femina Plus s.r.o., Nám. Svobody 690, 788 14 Rapotín"
+updated: "16. 6. 2023"
+hours:
+  - day: "Úterý"
+    slots:
+      - "11:00 – 14:00 pouze pro zvané"
+      - "14:00 – 18:00"
+  - day: "Pátek"
+    slots:
+      - "6:00 – 14:00 pouze pro zvané"

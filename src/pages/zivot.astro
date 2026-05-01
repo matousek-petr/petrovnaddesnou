@@ -2,10 +2,9 @@
 import Base from '@/layouts/Base.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import '@/styles/global.css';
 
-// Načtení budoucích akcí (od dneška dál)
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
@@ -23,12 +22,11 @@ const eventTypeColors: Record<string, string> = {
   'Administrativa': 'bg-orange-100 text-orange-700',
 };
 
-const associations = [
-  { name: 'SDH Petrov nad Desnou', desc: 'Sbor dobrovolných hasičů', href: '#' },
-  { name: 'TJ Sokol Petrov', desc: 'Tělovýchovná jednota', href: '#' },
-  { name: 'Myslivecký spolek', desc: 'Ochrana přírody a myslivost', href: '#' },
-  { name: 'Klub seniorů', desc: 'Aktivity pro starší spoluobčany', href: '#' },
-];
+const spolkyData = await getEntry('spolky', 'seznam');
+const associations = spolkyData.data.items;
+
+const odpadData = await getEntry('nastaveni', 'odpad');
+const odpadItems = odpadData.data.items;
 ---
 
 <Base title="Život v obci">
@@ -164,13 +162,7 @@ const associations = [
             <span class="text-xl">🗑️</span> Odpad
           </h2>
           <dl class="text-sm space-y-3">
-            {[
-              ['Směsný odpad', 'Každé pondělí'],
-              ['Plast',        'Každé 2 týdny v úterý'],
-              ['Papír',        'Každé 2 týdny ve středu'],
-              ['Sklo',         'Kontejnery u OÚ'],
-              ['Bioodpad',     'Duben – říjen, každý týden'],
-            ].map(([type, schedule]) => (
+            {odpadItems.map(({ type, schedule }) => (
               <div class="flex justify-between gap-2 py-2 border-b border-gray-100 last:border-0">
                 <dt class="text-gray-500">{type}</dt>
                 <dd class="font-medium text-gray-900 text-right">{schedule}</dd>

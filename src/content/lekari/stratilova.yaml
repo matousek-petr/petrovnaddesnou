@@ -1,0 +1,21 @@
+title: "Praktický lékař pro dospělé MUDr. Stratilová"
+phone: "583 237 155"
+address: "Rapotín"
+updated: "16. 6. 2023"
+hours:
+  - day: "Pondělí"
+    slots:
+      - "6:00 – 12:00"
+  - day: "Úterý"
+    slots:
+      - "6:00 – 7:30 odběry krve"
+      - "7:30 – 12:00"
+  - day: "Středa"
+    slots:
+      - "12:00 – 18:00"
+  - day: "Čtvrtek"
+    slots:
+      - "7:30 – 12:00"
+  - day: "Pátek"
+    slots:
+      - "6:00 – 12:00"

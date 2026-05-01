@@ -2,95 +2,11 @@
 import Base from '@/layouts/Base.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import { getCollection } from 'astro:content';
 import '@/styles/global.css';
 
-const doctorHours = [
-  {
-    title: 'Praktický lékař MUDr. Jan Ježek',
-    phone: '583 242 455',
-    address: 'Nám. Svobody 690, 788 14 Rapotín',
-    updated: '16. 6. 2023',
-    hours: [
-      ['Pondělí', ['7:30 – 8:30 odběry krve, ordinace - hodnocení INR', '8:30 – 11:00 ordinace (bez objednání)', '11:00 – 14:00 prohlídky - prevence, zaměstnání, ŘP (pozvaní/objednaní pacienti)']],
-      ['Úterý', ['13:00 – 16:00 ordinace (bez objednání)', '16:00 – 18:00 objednaní pacienti']],
-      ['Středa', ['8:00 – 9:00 odběry krve, ordinace - hodnocení INR', '9:00 – 11:30 ordinace (bez objednání)', '11:30 – 14:00 prohlídky objednaných pacientů']],
-      ['Čtvrtek', ['8:00 – 9:30 ordinace (bez objednání)', '9:30 – 11:00 posudky', '11:00 – 14:00 objednaní pacienti']],
-      ['Pátek', ['7:30 – 8:30 odběry krve, ordinace - hodnocení INR', '8:30 – 11:00 ordinace (bez objednání)', '11:00 – 14:00 prohlídky - prevence, zaměstnání, ŘP (pozvaní/objednaní pacienti)']],
-    ],
-  },
-  {
-    title: 'Praktický lékař pro dospělé MUDr. Stratilová',
-    phone: '583 237 155',
-    address: 'Rapotín',
-    updated: '16. 6. 2023',
-    hours: [
-      ['Pondělí', ['6:00 – 12:00']],
-      ['Úterý', ['6:00 – 7:30 odběry krve', '7:30 – 12:00']],
-      ['Středa', ['12:00 – 18:00']],
-      ['Čtvrtek', ['7:30 – 12:00']],
-      ['Pátek', ['6:00 – 12:00']],
-    ],
-  },
-  {
-    title: 'Praktický lékař pro děti a dorost MUDr. František Hejl',
-    phone: '583 283 213 / 583 241 085',
-    address: 'Nám. Svobody 690, 788 14 Rapotín / Nový Malín',
-    updated: '16. 6. 2023',
-    hours: [
-      ['Pondělí', ['10:00 – 13:00']],
-      ['Úterý', ['7:30 – 9:30', '10:00 – 12:00 poradna pro kojence']],
-      ['Středa', ['7:30 – 11:00']],
-      ['Čtvrtek', ['13:00 – 15:00']],
-      ['Pátek', ['10:00 – 13:00']],
-    ],
-  },
-  {
-    title: 'Gynekologická ambulance MUDr. Michaela Potěšilová',
-    phone: '739 096 078',
-    address: 'Femina Plus s.r.o., Nám. Svobody 690, 788 14 Rapotín',
-    updated: '16. 6. 2023',
-    hours: [
-      ['Úterý', ['11:00 – 14:00 pouze pro zvané', '14:00 – 18:00']],
-      ['Pátek', ['6:00 – 14:00 pouze pro zvané']],
-    ],
-  },
-  {
-    title: 'Ušní, nosní, krční (ORL) MUDr. Darina Špičková',
-    phone: '721 583 718',
-    address: 'Rapotín',
-    updated: '16. 6. 2023',
-    hours: [
-      ['Pondělí', ['13:00 – 16:00']],
-      ['Čtvrtek', ['08:00 – 12:00']],
-    ],
-  },
-  {
-    title: 'Rehabilitace Miroslav Kašpar',
-    phone: '739 062 028',
-    address: 'Nám. Svobody 690, 788 14 Rapotín',
-    updated: '16. 6. 2023',
-    hours: [
-      ['Pondělí', ['7:30 – 15:00']],
-      ['Úterý', ['7:30 – 15:00']],
-      ['Středa', ['7:30 – 15:00']],
-      ['Čtvrtek', ['7:30 – 15:00']],
-      ['Pátek', ['7:30 – 13:00']],
-    ],
-  },
-];
-
-const sections = [
-  {
-    title: 'Jak stránku používat',
-    content:
-      'Tento přehled uvádí konkrétní ordinační hodiny jednotlivých lékařů a ambulancí v okolí obce. Hodiny se mohou měnit, proto je před návštěvou vhodné ověřit aktuální provoz telefonicky.',
-  },
-  {
-    title: 'Pro koho je stránka určena',
-    content:
-      'Najdete zde praktického lékaře pro dospělé, pediatra, gynekologii, ORL i rehabilitaci v širším okolí obce.',
-  },
-];
+const lekari = (await getCollection('lekari'))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title, 'cs'));
 ---
 
 <Base title="Ordinační hodiny lékařů" description="Přehled ordinačních hodin lékařů a ambulancí v okolí Petrově nad Desnou.">
@@ -103,19 +19,27 @@ const sections = [
         </nav>
         <h1 class="text-3xl font-bold">Ordinační hodiny lékařů</h1>
         <p class="text-forest-100 text-sm mt-2 max-w-2xl">
-          Přehled zdravotních a návazných ordinací v okolí obce s odkazy na jejich oficiální stránky.
+          Přehled zdravotních a návazných ordinací v okolí obce.
         </p>
       </div>
     </div>
 
     <div class="max-w-6xl mx-auto px-4 py-12 space-y-10">
       <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {sections.map((section) => (
-          <div class="card p-5 md:p-6">
-            <h2 class="font-semibold text-gray-900 mb-2">{section.title}</h2>
-            <p class="text-sm text-gray-600 leading-relaxed">{section.content}</p>
-          </div>
-        ))}
+        <div class="card p-5 md:p-6">
+          <h2 class="font-semibold text-gray-900 mb-2">Jak stránku používat</h2>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Tento přehled uvádí konkrétní ordinační hodiny jednotlivých lékařů a ambulancí v okolí obce.
+            Hodiny se mohou měnit, proto je před návštěvou vhodné ověřit aktuální provoz telefonicky.
+          </p>
+        </div>
+        <div class="card p-5 md:p-6">
+          <h2 class="font-semibold text-gray-900 mb-2">Pro koho je stránka určena</h2>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Najdete zde praktického lékaře pro dospělé, pediatra, gynekologii, ORL i rehabilitaci
+            v širším okolí obce.
+          </p>
+        </div>
       </section>
 
       <section>
@@ -128,7 +52,7 @@ const sections = [
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-          {doctorHours.map((doctor) => (
+          {lekari.map(({ data: doctor }) => (
             <details class="group card overflow-hidden border border-gray-200">
               <summary class="cursor-pointer list-none p-5 md:p-6 flex items-start justify-between gap-4 hover:bg-gray-50 transition-colors">
                 <div>
@@ -146,15 +70,11 @@ const sections = [
 
               <div class="px-5 md:px-6 pb-5 md:pb-6 pt-0 space-y-2 border-t border-gray-100">
                 <p class="text-sm text-gray-500 mt-4 mb-3">Rozklikni pro časy ordinace.</p>
-                {doctor.hours.map(([day, items]) => (
+                {doctor.hours.map(({ day, slots }) => (
                   <div class="rounded-lg border border-gray-200 bg-gray-50 p-3">
-                    <div class="flex flex-wrap items-start gap-2 justify-between">
-                      <p class="font-semibold text-gray-900">{day}</p>
-                    </div>
+                    <p class="font-semibold text-gray-900">{day}</p>
                     <ul class="mt-2 space-y-1 text-sm text-gray-600">
-                      {items.map((item) => (
-                        <li>{item}</li>
-                      ))}
+                      {slots.map((slot) => <li>{slot}</li>)}
                     </ul>
                   </div>
                 ))}
@@ -162,13 +82,6 @@ const sections = [
             </details>
           ))}
         </div>
-      </section>
-
-      <section class="card p-6 bg-forest-50 border-forest-100">
-        <h2 class="font-semibold text-gray-900 mb-2">Poznámka</h2>
-        <p class="text-sm text-gray-600 leading-relaxed">
-          Pokud chceš, můžeme to ještě zkrátit do podoby jedné tabulky nebo rozdělit na jednotlivé kategorie podle typu péče.
-        </p>
       </section>
     </div>
   </main>
