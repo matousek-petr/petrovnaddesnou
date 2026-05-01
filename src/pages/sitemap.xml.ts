@@ -14,6 +14,7 @@ export async function GET() {
     { url: '/obcasnik',               priority: '0.7', changefreq: 'monthly' },
     { url: '/ordinacni-hodiny-lekaru',priority: '0.8', changefreq: 'monthly' },
     { url: '/kontakt',                priority: '0.8', changefreq: 'monthly' },
+    { url: '/ochrana-osobnich-udaju', priority: '0.5', changefreq: 'yearly'  },
   ];
 
   const aktuality = await getCollection('aktuality');

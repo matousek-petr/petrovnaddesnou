@@ -1,0 +1,119 @@
+---
+import Base from '@/layouts/Base.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import { getEntry } from 'astro:content';
+import '@/styles/global.css';
+
+const k = (await getEntry('nastaveni', 'kontakt')).data;
+---
+
+<Base
+  title="Ochrana osobních údajů"
+  description="Informace o zpracování osobních údajů a používání cookies na webu obce Petrov nad Desnou."
+>
+  <Header />
+  <main id="main-content" class="flex-1">
+    <div class="bg-forest-700 text-white py-10">
+      <div class="max-w-6xl mx-auto px-4">
+        <nav class="text-forest-200 text-sm mb-2">
+          <a href="/" class="hover:text-white">Domů</a> / Ochrana osobních údajů
+        </nav>
+        <h1 class="text-3xl font-bold">Ochrana osobních údajů</h1>
+        <p class="text-forest-100 text-sm mt-2">Informace dle čl. 13 nařízení GDPR (EU) 2016/679</p>
+      </div>
+    </div>
+
+    <div class="max-w-3xl mx-auto px-4 py-12 space-y-10">
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold text-gray-900">Správce osobních údajů</h2>
+        <div class="card p-5 text-sm text-gray-600 space-y-1">
+          <p class="font-semibold text-gray-900">Obec Petrov nad Desnou</p>
+          <p>{k.address}, {k.city}</p>
+          <p>IČO: {k.ico}</p>
+          <p>Datová schránka: {k.ds}</p>
+          <p>E-mail: <a href={`mailto:${k.email}`} class="text-forest-600 hover:underline">{k.email}</a></p>
+          <p>Telefon: <a href={`tel:${k.phone.replace(/\s/g,'')}`} class="text-forest-600 hover:underline">{k.phone}</a></p>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold text-gray-900">Cookies</h2>
+        <p class="text-gray-600 leading-relaxed">
+          Tento web používá výhradně technické cookies nezbytné pro jeho správné fungování
+          (uložení souhlasu s tímto oznámením). Nepoužíváme sledovací, analytické ani
+          marketingové cookies. Žádné osobní údaje se prostřednictvím cookies neshromažďují
+          ani nepředávají třetím stranám.
+        </p>
+        <div class="card p-5 text-sm space-y-2">
+          <div class="flex justify-between gap-4 py-1 border-b border-gray-100">
+            <span class="font-medium text-gray-700">Název</span>
+            <span class="font-medium text-gray-700">Účel</span>
+            <span class="font-medium text-gray-700">Platnost</span>
+          </div>
+          <div class="flex justify-between gap-4 py-1 text-gray-600">
+            <span class="font-mono text-xs">cookie-consent</span>
+            <span>Uložení souhlasu s cookies</span>
+            <span>trvalé (localStorage)</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold text-gray-900">Zpracování osobních údajů</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="font-semibold text-gray-900 mb-2">Kontaktní formulář</h3>
+            <p class="text-gray-600 leading-relaxed text-sm">
+              Při odeslání kontaktního formuláře zpracováváme vaše jméno, e-mailovou adresu
+              a obsah zprávy. Právním základem je váš souhlas (čl. 6 odst. 1 písm. a) GDPR).
+              Údaje jsou zpracovávány pouze za účelem odpovědi na váš dotaz a nejsou předávány
+              třetím stranám s výjimkou provozovatele formulářové služby Formspree, Inc.,
+              která zpracovává údaje v souladu s GDPR. Údaje uchováváme po dobu nezbytnou
+              pro vyřízení vaší žádosti, nejdéle 1 rok.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-semibold text-gray-900 mb-2">Úřední agenda</h3>
+            <p class="text-gray-600 leading-relaxed text-sm">
+              Osobní údaje zpracovávané v rámci výkonu přenesené a samostatné působnosti obce
+              jsou zpracovávány na základě zákonných povinností (čl. 6 odst. 1 písm. c) GDPR)
+              a v souladu s příslušnými právními předpisy. Podrobné informace jsou k dispozici
+              na obecním úřadě.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold text-gray-900">Vaše práva</h2>
+        <p class="text-gray-600 leading-relaxed text-sm">
+          V souvislosti se zpracováním osobních údajů máte právo na přístup k údajům,
+          jejich opravu nebo výmaz, omezení zpracování, přenositelnost údajů a právo
+          vznést námitku. Máte také právo podat stížnost u dozorového úřadu —
+          <a href="https://www.uoou.cz" target="_blank" rel="noopener noreferrer" class="text-forest-600 hover:underline">
+            Úřadu pro ochranu osobních údajů
+          </a> (www.uoou.cz).
+        </p>
+        <p class="text-gray-600 leading-relaxed text-sm">
+          Pro uplatnění svých práv nás kontaktujte na adrese
+          <a href={`mailto:${k.email}`} class="text-forest-600 hover:underline">{k.email}</a>
+          nebo osobně na obecním úřadě.
+        </p>
+      </section>
+
+      <section class="space-y-2">
+        <h2 class="text-xl font-bold text-gray-900">Platnost dokumentu</h2>
+        <p class="text-gray-600 text-sm">
+          Tento dokument je platný od 1. 5. 2026. Vyhrazujeme si právo jej aktualizovat;
+          aktuální verze je vždy dostupná na této stránce.
+        </p>
+      </section>
+
+    </div>
+  </main>
+  <Footer />
+</Base>
