@@ -23,6 +23,7 @@ const udalostiCollection = defineCollection({
     location: z.string(),
     description: z.string(),
     eventType: z.enum(['Kultura', 'Sport', 'Setkání', 'Administrativa']).optional(),
+    posterImage: z.string().optional(),
     isFeatured: z.boolean().default(false),
   }),
 });

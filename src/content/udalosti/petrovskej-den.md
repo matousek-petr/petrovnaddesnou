@@ -4,6 +4,7 @@ date: 2026-05-08
 time: "10:00"
 location: Petrov nad Desnou
 eventType: Kultura
+posterImage: /foto/udalosti/petrovskej-den.jpeg
 description: Slavnostní den zasvěcený hasičům, policistům a zdravotnickým záchranářům s besídkou pro děti
 isFeatured: true
 ---

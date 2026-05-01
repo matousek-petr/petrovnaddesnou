@@ -19,6 +19,8 @@ const upcomingEvents = (await getCollection('udalosti'))
   .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime())
   .slice(0, 3);
 
+const highlightedEvent = upcomingEvents.find((event) => event.data.posterImage) ?? upcomingEvents[0] ?? null;
+
 // Načtení posledních 3 dokumentů z úřední desky
 const recentDocuments = (await getCollection('uredni_deska'))
   .filter(d => !d.data.isArchived)
@@ -101,12 +103,46 @@ const quickLinks = [
         <h2 class="section-title mb-0">Nadcházející akce</h2>
         <a href="/zivot#akce" class="text-sm text-forest-600 hover:text-forest-700 font-medium">Všechny akce →</a>
       </div>
+      {highlightedEvent?.data.posterImage && (
+        <a href="/zivot#akce" class="card mb-4 grid grid-cols-1 md:grid-cols-[220px_1fr] overflow-hidden hover:border-forest-200">
+          <div class="bg-gray-100 min-h-56 md:min-h-full">
+            <img
+              src={highlightedEvent.data.posterImage}
+              alt={`Plakát akce ${highlightedEvent.data.title}`}
+              class="w-full h-full object-cover"
+              loading="eager"
+            />
+          </div>
+          <div class="p-5 md:p-6 flex flex-col justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wide text-forest-600 mb-2">Vybraná akce</p>
+              <h3 class="text-2xl font-bold text-gray-900 mb-2">{highlightedEvent.data.title}</h3>
+              <p class="text-sm text-gray-600 leading-relaxed">{highlightedEvent.data.description}</p>
+            </div>
+            <div class="flex flex-wrap gap-3 text-sm text-gray-500">
+              <span>{new Intl.DateTimeFormat('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(highlightedEvent.data.date)}</span>
+              {highlightedEvent.data.time && <span>· {highlightedEvent.data.time}</span>}
+              <span>· {highlightedEvent.data.location}</span>
+            </div>
+          </div>
+        </a>
+      )}
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {upcomingEvents.length > 0 ? (
           upcomingEvents.map((event) => {
             const eventDate = new Date(event.data.date);
             return (
-              <a href="/zivot#akce" class="card flex items-start gap-4 p-4 hover:border-forest-200">
+              <a href="/zivot#akce" class="card flex flex-col gap-3 p-4 hover:border-forest-200">
+                {event.data.posterImage && (
+                  <div class="overflow-hidden rounded-lg bg-gray-100 aspect-[4/3]">
+                    <img
+                      src={event.data.posterImage}
+                      alt={`Plakát akce ${event.data.title}`}
+                      class="w-full h-full object-cover"
+                      loading={event === highlightedEvent ? 'eager' : 'lazy'}
+                    />
+                  </div>
+                )}
                 <div class="shrink-0 w-12 text-center bg-forest-50 rounded-lg py-1.5 border border-forest-100">
                   <p class="text-xs text-forest-500 font-medium uppercase">
                     {new Intl.DateTimeFormat('cs-CZ', { weekday: 'short' }).format(eventDate).slice(0, 2).toUpperCase()}
