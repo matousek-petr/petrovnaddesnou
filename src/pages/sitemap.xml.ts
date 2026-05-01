@@ -9,6 +9,8 @@ export async function GET() {
     { url: '/aktuality', priority: '0.9', changefreq: 'daily' },
     { url: '/zivot', priority: '0.8', changefreq: 'weekly' },
     { url: '/rezervace-hriste', priority: '0.8', changefreq: 'weekly' },
+    { url: '/obcasnik', priority: '0.7', changefreq: 'monthly' },
+    { url: '/ordinacni-hodiny-lekaru', priority: '0.8', changefreq: 'monthly' },
     { url: '/kontakt', priority: '0.8', changefreq: 'monthly' },
   ];
 

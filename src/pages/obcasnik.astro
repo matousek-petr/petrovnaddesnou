@@ -1,0 +1,68 @@
+---
+import Base from '@/layouts/Base.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import '@/styles/global.css';
+
+const pdfUrl = '/dokumenty/obcasnik-55-brezen-2026.pdf';
+---
+
+<Base title="Občasník - číslo 55" description="Občasník obce Petrov nad Desnou - číslo 55, březen 2026. Otevři přímo v prohlížeči nebo si soubor stáhni.">
+  <Header />
+  <main id="main-content" class="flex-1 bg-gray-50">
+    <div class="bg-forest-700 text-white py-10">
+      <div class="max-w-6xl mx-auto px-4">
+        <nav class="text-forest-200 text-sm mb-2">
+          <a href="/" class="hover:text-white">Domů</a> / Občasník
+        </nav>
+        <h1 class="text-3xl font-bold">Občasník - číslo 55</h1>
+        <p class="text-forest-100 text-sm mt-2 max-w-2xl">
+          Březen 2026. Dokument je vložený přímo na stránce, takže se dá číst bez stahování.
+        </p>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-12 space-y-6">
+      <section class="card p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-forest-600 mb-1">PDF prohlížeč</p>
+          <h2 class="text-xl font-bold text-gray-900">Občasník v prohlížeči</h2>
+          <p class="text-sm text-gray-600 mt-1">Pokud se vestavěný prohlížeč nenačte, použij tlačítko pro otevření nebo stažení souboru.</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href={pdfUrl} target="_blank" rel="noopener noreferrer" class="btn-primary whitespace-nowrap">Otevřít PDF</a>
+          <a href={pdfUrl} download class="btn-secondary whitespace-nowrap">Stáhnout PDF</a>
+        </div>
+      </section>
+
+      <section class="card overflow-hidden border border-gray-200 bg-white">
+        <div class="bg-gray-100 border-b border-gray-200 px-4 py-3 flex items-center justify-between gap-3">
+          <p class="text-sm font-medium text-gray-700">{pdfUrl}</p>
+          <a href={pdfUrl} target="_blank" rel="noopener noreferrer" class="text-sm text-forest-600 hover:text-forest-700 font-medium whitespace-nowrap">Otevřít v nové kartě →</a>
+        </div>
+        <div class="h-[78vh] bg-gray-200">
+          <object data={pdfUrl} type="application/pdf" class="w-full h-full">
+            <div class="h-full flex flex-col items-center justify-center text-center p-8 bg-white">
+              <h2 class="text-xl font-bold text-gray-900">PDF se nepodařilo zobrazit přímo v prohlížeči</h2>
+              <p class="text-sm text-gray-600 mt-2 max-w-xl">
+                Použij tlačítko pro otevření souboru v nové kartě nebo stažení PDF do zařízení.
+              </p>
+              <div class="mt-5 flex flex-wrap gap-3 justify-center">
+                <a href={pdfUrl} target="_blank" rel="noopener noreferrer" class="btn-primary">Otevřít PDF</a>
+                <a href={pdfUrl} download class="btn-secondary">Stáhnout PDF</a>
+              </div>
+            </div>
+          </object>
+        </div>
+      </section>
+
+      <section class="card p-5 md:p-6 bg-forest-50 border-forest-100">
+        <h2 class="font-semibold text-gray-900 mb-2">Tip</h2>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          Na mobilu se PDF obvykle otevře v nativním prohlížeči dokumentů. Kdyby se načítání zpomalilo, zkus otevření v nové kartě nebo stažení.
+        </p>
+      </section>
+    </div>
+  </main>
+  <Footer />
+</Base>
