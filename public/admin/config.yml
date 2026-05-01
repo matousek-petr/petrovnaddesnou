@@ -1,0 +1,71 @@
+backend:
+  name: proxy
+  proxy_url: http://localhost:3001/api
+  branch: main
+  
+site_url: http://localhost:4321
+display_url: http://localhost:4321
+logo_url: /foto/znak.png
+logo_url: /foto/znak.png
+
+# Media folder je pro uploady obrázků
+media_folder: public/uploads
+public_path: /uploads
+
+# Timezone
+i18n:
+  structure: single_file
+  locales: [cs]
+  default_locale: cs
+
+# Kolekce obsahu
+collections:
+  # Aktuality
+  - name: aktuality
+    label: Aktuality
+    label_singular: Aktualita
+    folder: src/content/aktuality
+    create: true
+    slug: "{{slug}}"
+    format: yaml-frontmatter
+    fields:
+      - { label: Nadpis, name: title, widget: string }
+      - { label: Popis, name: description, widget: text }
+      - { label: Datum publikace, name: pubDate, widget: datetime }
+      - { label: Kategorie, name: category, widget: select, options: [Oznámení, Akce, Doprava, Zastupitelstvo, Ostatní] }
+      - { label: Autor, name: author, widget: string, required: false }
+      - { label: Obsah, name: body, widget: markdown }
+
+  # Akce
+  - name: udalosti
+    label: Akce v obci
+    label_singular: Akce
+    folder: src/content/udalosti
+    create: true
+    slug: "{{slug}}"
+    format: yaml-frontmatter
+    fields:
+      - { label: Název akce, name: title, widget: string }
+      - { label: Datum, name: date, widget: datetime }
+      - { label: Čas, name: time, widget: string, required: false, hint: "HH:MM" }
+      - { label: Místo, name: location, widget: string }
+      - { label: Popis, name: description, widget: text }
+      - { label: Typ akce, name: eventType, widget: select, options: [Kultura, Sport, Setkání, Administrativa], required: false }
+      - { label: Featured (zobrazit na homepage), name: isFeatured, widget: boolean, default: false }
+      - { label: Obsah, name: body, widget: markdown, required: false }
+
+  # Úřední deska
+  - name: uredni_deska
+    label: Úřední deska
+    label_singular: Dokument
+    folder: src/content/uredni_deska
+    create: true
+    slug: "{{slug}}"
+    format: yaml-frontmatter
+    fields:
+      - { label: Název dokumentu, name: title, widget: string }
+      - { label: Datum zveřejnění, name: pubDate, widget: datetime }
+      - { label: Kategorie, name: category, widget: select, options: [Vyhláška, Úřední oznámení, Zápis ze zasedání, Výběrové řízení] }
+      - { label: URL na PDF, name: fileUrl, widget: string, required: false }
+      - { label: Archivováno, name: isArchived, widget: boolean, default: false }
+      - { label: Obsah, name: body, widget: markdown, required: false }

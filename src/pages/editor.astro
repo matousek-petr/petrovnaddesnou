@@ -1,0 +1,125 @@
+---
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editor Aktivit - Petrov nad Desnou</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; padding: 20px; }
+      .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 30px; }
+      h1 { margin-bottom: 30px; color: #1a1a1a; }
+      .editor { margin-bottom: 30px; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; background: #fafafa; }
+      .editor h2 { font-size: 18px; margin-bottom: 15px; color: #333; }
+      .form-group { margin-bottom: 15px; }
+      label { display: block; font-weight: 500; margin-bottom: 5px; color: #555; }
+      input, textarea, select { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; }
+      textarea { min-height: 150px; resize: vertical; }
+      button { background: #2d5121; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500; }
+      button:hover { background: #1e3817; }
+      .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 6px; margin-top: 10px; display: none; }
+      .error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 6px; margin-top: 10px; display: none; }
+      .back-link { margin-bottom: 20px; }
+      a { color: #2d5121; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="back-link">
+        <a href="/">← Zpět na web</a>
+      </div>
+      <h1>📝 Editor Aktivit</h1>
+      
+      <div class="editor">
+        <h2>Přidat Novou Aktualitu</h2>
+        <form id="aktualityForm">
+          <div class="form-group">
+            <label>Nadpis *</label>
+            <input type="text" name="title" required placeholder="Název artiklu">
+          </div>
+          <div class="form-group">
+            <label>Popis *</label>
+            <textarea name="description" required placeholder="Krátký popis"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Datum publikace *</label>
+            <input type="datetime-local" name="pubDate" required>
+          </div>
+          <div class="form-group">
+            <label>Kategorie *</label>
+            <select name="category" required>
+              <option value="">-- Vyberte --</option>
+              <option value="Oznámení">Oznámení</option>
+              <option value="Akce">Akce</option>
+              <option value="Doprava">Doprava</option>
+              <option value="Zastupitelstvo">Zastupitelstvo</option>
+              <option value="Ostatní">Ostatní</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Autor</label>
+            <input type="text" name="author" placeholder="Volitelné">
+          </div>
+          <div class="form-group">
+            <label>Obsah (Markdown) *</label>
+            <textarea name="body" required placeholder="Napište obsah v Markdownu..."></textarea>
+          </div>
+          <button type="submit">💾 Uložit Aktualitu</button>
+          <div class="success">✅ Aktivita úspěšně uložena!</div>
+          <div class="error">❌ Chyba: <span></span></div>
+        </form>
+      </div>
+
+      <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin-top: 30px;">
+        <h3>💡 Jak používat:</h3>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+          <li><strong>Nadpis:</strong> Krátký název artikulu</li>
+          <li><strong>Popis:</strong> Prvních 200 znaků se zobrazí v seznamu</li>
+          <li><strong>Obsah:</strong> Celý obsah v <a href="https://www.markdownguide.org/" target="_blank">Markdownu</a></li>
+          <li><strong>Kategorie:</strong> Ovlivňuje barvu značky na webu</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById('aktualityForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        
+        // Vytvoři slug z nadpisu
+        const slug = data.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+        
+        // Formátuj YAML frontmatter
+        const yaml = `title: ${data.title}
+description: ${data.description}
+pubDate: ${new Date(data.pubDate).toISOString().split('T')[0]}
+category: ${data.category}${data.author ? `\nauthor: ${data.author}` : ''}`;
+        
+        const markdown = `---\n${yaml}\n---\n\n${data.body}`;
+        
+        // Simuluj uložení (v produkci by to šlo na server)
+        console.log('Nový soubor:', `src/content/aktuality/${slug}.md`);
+        console.log('Obsah:');
+        console.log(markdown);
+        
+        // Zobraz success zprávu
+        const successMsg = e.target.querySelector('.success');
+        successMsg.style.display = 'block';
+        e.target.reset();
+        
+        setTimeout(() => {
+          successMsg.style.display = 'none';
+        }, 3000);
+      });
+    </script>
+  </body>
+</html>

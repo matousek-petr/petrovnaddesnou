@@ -8,8 +8,10 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^4.16.18",
     "@astrojs/tailwind": "^5.1.4",
+    "astro": "^4.16.18",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "tailwindcss": "^3.4.17"
   }
 }

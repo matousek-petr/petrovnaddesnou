@@ -73,5 +73,30 @@ const currentPath = Astro.url.pathname;
 <script>
   const btn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('mobile-menu');
-  btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+  const links = menu?.querySelectorAll('a');
+  
+  // Toggle menu
+  btn?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+    // Změň ikonu hamburger na X
+    const svg = btn.querySelector('svg');
+    if (svg) {
+      if (menu?.classList.contains('hidden')) {
+        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
+      } else {
+        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>';
+      }
+    }
+  });
+  
+  // Zavři menu kliknutím na odkaz
+  links?.forEach(link => {
+    link.addEventListener('click', () => {
+      menu?.classList.add('hidden');
+      const svg = btn?.querySelector('svg');
+      if (svg) {
+        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
+      }
+    });
+  });
 </script>
