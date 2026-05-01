@@ -1,0 +1,80 @@
+---
+import Base from '@/layouts/Base.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import { getCollection } from 'astro:content';
+import '@/styles/global.css';
+
+export async function getStaticPaths() {
+  const issues = await getCollection('obcasnik');
+  return issues.map((issue) => ({
+    params: { slug: issue.slug },
+    props: { issue },
+  }));
+}
+
+const { issue } = Astro.props;
+const { data } = issue;
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('cs-CZ', { year: 'numeric', month: 'long' });
+}
+---
+
+<Base title={data.title} description={`${data.title} – obecní zpravodaj Petrov nad Desnou.`}>
+  <Header />
+  <main id="main-content" class="flex-1 bg-gray-50">
+    <div class="bg-forest-700 text-white py-10">
+      <div class="max-w-6xl mx-auto px-4">
+        <nav class="text-forest-200 text-sm mb-2">
+          <a href="/" class="hover:text-white">Domů</a> /
+          <a href="/obcasnik" class="hover:text-white">Občasník</a> /
+          č. {data.number}
+        </nav>
+        <h1 class="text-3xl font-bold">{data.title}</h1>
+        <p class="text-forest-100 text-sm mt-2">{formatDate(data.pubDate)}</p>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-12 space-y-6">
+      <section class="card p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-forest-600 mb-1">PDF prohlížeč</p>
+          <h2 class="text-xl font-bold text-gray-900">{data.title}</h2>
+          <p class="text-sm text-gray-600 mt-1">Pokud se vestavěný prohlížeč nenačte, použij tlačítko pro otevření nebo stažení souboru.</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href={data.fileUrl} target="_blank" rel="noopener noreferrer" class="btn-primary whitespace-nowrap">Otevřít PDF</a>
+          <a href={data.fileUrl} download class="btn-secondary whitespace-nowrap">Stáhnout PDF</a>
+        </div>
+      </section>
+
+      <section class="card overflow-hidden border border-gray-200 bg-white">
+        <div class="bg-gray-100 border-b border-gray-200 px-4 py-3 flex items-center justify-between gap-3">
+          <p class="text-sm font-medium text-gray-700">{data.fileUrl}</p>
+          <a href={data.fileUrl} target="_blank" rel="noopener noreferrer" class="text-sm text-forest-600 hover:text-forest-700 font-medium whitespace-nowrap">Otevřít v nové kartě →</a>
+        </div>
+        <div class="h-[78vh] bg-gray-200">
+          <object data={data.fileUrl} type="application/pdf" class="w-full h-full">
+            <div class="h-full flex flex-col items-center justify-center text-center p-8 bg-white">
+              <h2 class="text-xl font-bold text-gray-900">PDF se nepodařilo zobrazit přímo v prohlížeči</h2>
+              <p class="text-sm text-gray-600 mt-2 max-w-xl">
+                Použij tlačítko pro otevření souboru v nové kartě nebo stažení PDF do zařízení.
+              </p>
+              <div class="mt-5 flex flex-wrap gap-3 justify-center">
+                <a href={data.fileUrl} target="_blank" rel="noopener noreferrer" class="btn-primary">Otevřít PDF</a>
+                <a href={data.fileUrl} download class="btn-secondary">Stáhnout PDF</a>
+              </div>
+            </div>
+          </object>
+        </div>
+      </section>
+
+      <div class="flex items-center justify-between">
+        <a href="/obcasnik" class="text-sm text-forest-600 hover:text-forest-800 font-medium">← Všechna čísla</a>
+        <p class="text-xs text-gray-400">Na mobilu se PDF obvykle otevře v nativním prohlížeči dokumentů.</p>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Base>

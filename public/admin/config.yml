@@ -56,6 +56,20 @@ collections:
       - { label: Featured (zobrazit na homepage), name: isFeatured, widget: boolean, default: false }
       - { label: Obsah, name: body, widget: markdown, required: false }
 
+  # Občasník
+  - name: obcasnik
+    label: Občasník
+    label_singular: Číslo občasníku
+    folder: src/content/obcasnik
+    create: true
+    slug: "obcasnik-{{fields.number}}-{{year}}-{{month}}"
+    format: yaml-frontmatter
+    fields:
+      - { label: Nadpis, name: title, widget: string, hint: "Např. Občasník č. 56 – červen 2026" }
+      - { label: Číslo, name: number, widget: number, value_type: int }
+      - { label: Datum vydání, name: pubDate, widget: datetime }
+      - { label: PDF soubor, name: fileUrl, widget: file, media_folder: /public/dokumenty, public_folder: /dokumenty, hint: "Nahraj PDF občasníku" }
+
   # Úřední deska
   - name: uredni_deska
     label: Úřední deska

@@ -52,9 +52,21 @@ const strankyCollection = defineCollection({
   }),
 });
 
+// Kolekce občasník (čísla obecního zpravodaje)
+const obcasnikCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    number: z.number(),
+    pubDate: z.coerce.date(),
+    fileUrl: z.string(),
+  }),
+});
+
 export const collections = {
   aktuality: aktualityCollection,
   udalosti: udalostiCollection,
   uredni_deska: uredniDeskaCollection,
   stranky: strankyCollection,
+  obcasnik: obcasnikCollection,
 };
