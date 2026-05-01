@@ -7,10 +7,12 @@ import '@/styles/global.css';
 
 const zastupitele = await getEntry('zastupitele', 'seznam');
 const nastaveni = await getEntry('nastaveni', 'uredni-hodiny');
+const kontakt = await getEntry('nastaveni', 'kontakt');
 const members = zastupitele.data.members;
 const volebnObdobi = zastupitele.data.volebnObdobi;
 const officeHours = nastaveni.data.hours;
 const officeNote = nastaveni.data.note;
+const k = kontakt.data;
 ---
 
 <Base title="Obecní úřad">
@@ -88,9 +90,9 @@ const officeNote = nastaveni.data.note;
         <div class="card p-5">
           <h3 class="font-semibold text-gray-900 mb-3">Kontakt na úřad</h3>
           <address class="not-italic text-sm text-gray-600 space-y-2">
-            <p>Petrov nad Desnou 156<br/>788 16 Petrov nad Desnou</p>
-            <p><a href="tel:+420583284647" class="text-forest-600 hover:text-forest-700">+420 583 284 647</a></p>
-            <p><a href="mailto:podatelna@petrovnaddesnou.cz" class="text-forest-600 hover:text-forest-700">podatelna@petrovnaddesnou.cz</a></p>
+            <p>{k.address}<br/>{k.city}</p>
+            <p><a href={`tel:${k.phone.replace(/\s/g, '')}`} class="text-forest-600 hover:text-forest-700">{k.phone}</a></p>
+            <p><a href={`mailto:${k.email}`} class="text-forest-600 hover:text-forest-700">{k.email}</a></p>
           </address>
           <a href="/kontakt" class="btn-primary text-sm mt-4 w-full justify-center">Kontaktní stránka</a>
         </div>
@@ -98,7 +100,7 @@ const officeNote = nastaveni.data.note;
         <div class="card p-5">
           <h3 class="font-semibold text-gray-900 mb-3">Datová schránka</h3>
           <p class="text-sm text-gray-600">ID datové schránky:</p>
-          <p class="font-mono text-lg font-bold text-gray-900 mt-1">c42pa2g</p>
+          <p class="font-mono text-lg font-bold text-gray-900 mt-1">{k.ds}</p>
         </div>
       </aside>
     </div>

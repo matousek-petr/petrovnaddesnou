@@ -7,6 +7,7 @@ import '@/styles/global.css';
 
 const obciPage = await getEntry('stranky', 'o-obci');
 const { Content } = await obciPage.render();
+const k = (await getEntry('nastaveni', 'kontakt')).data;
 ---
 
 <Base title="O obci">
@@ -39,9 +40,9 @@ const { Content } = await obciPage.render();
               ['Nejvyšší bod', 'Petrovský vrch 790 m'],
               ['Kraj', 'Olomoucký'],
               ['Okres', 'Šumperk'],
-              ['PSČ', '788 16'],
-              ['IČO', '72054433'],
-              ['Datová schránka', 'c42pa2g'],
+              ['PSČ', k.city.split(' ')[0]],
+              ['IČO', k.ico],
+              ['Datová schránka', k.ds],
             ].map(([label, value]) => (
               <div class="flex justify-between gap-2">
                 <dt class="text-gray-500">{label}</dt>

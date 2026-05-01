@@ -2,7 +2,7 @@
 import Base from '@/layouts/Base.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import '@/styles/global.css';
 
 // Načtení posledních 3 aktualit
@@ -28,6 +28,11 @@ const recentDocuments = (await getCollection('uredni_deska'))
 function getDocumentHref(doc) {
   return doc.data.sourceUrl ?? doc.data.fileUrl ?? '/uredni-deska';
 }
+
+const officeHoursData = await getEntry('nastaveni', 'uredni-hodiny');
+const officeHours = officeHoursData.data.hours.filter(h => h.am !== 'Zavřeno');
+const officeNote = officeHoursData.data.note;
+const k = (await getEntry('nastaveni', 'kontakt')).data;
 
 const quickLinks = [
   { icon: '📋', label: 'Úřední deska',      href: '/uredni-deska',  desc: 'Vyhlášky, oznámení a dokumenty' },
@@ -213,12 +218,7 @@ const quickLinks = [
           </h3>
           <table class="text-sm w-full">
             <tbody class="divide-y divide-gray-100">
-              {[
-                ['Pondělí', '8:00–12:00', '13:00–17:00'],
-                ['Úterý',   '8:00–12:00', '13:00–14:30'],
-                ['Středa',  '8:00–12:00', '13:00–17:00'],
-                ['Čtvrtek', '8:00–12:00', '13:00–14:30'],
-              ].map(([day, am, pm]) => (
+              {officeHours.map(({ day, am, pm }) => (
                 <tr>
                   <td class="py-1.5 font-medium text-gray-700">{day}</td>
                   <td class="py-1.5 text-gray-500 text-right">{am}</td>
@@ -227,7 +227,7 @@ const quickLinks = [
               ))}
             </tbody>
           </table>
-          <p class="text-xs text-gray-400 mt-3">Mimo úřední hodiny po telefonické domluvě.</p>
+          {officeNote && <p class="text-xs text-gray-400 mt-3">{officeNote}</p>}
         </div>
       </div>
     </section>

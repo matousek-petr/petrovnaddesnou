@@ -177,6 +177,20 @@ collections:
               - { label: Druh odpadu, name: type, widget: string }
               - { label: Harmonogram, name: schedule, widget: string }
 
+      - name: kontakt
+        label: Kontaktní údaje obce
+        file: src/content/nastaveni/kontakt.yaml
+        format: yaml
+        fields:
+          - { label: Adresa (ulice a číslo), name: address, widget: string }
+          - { label: Město a PSČ, name: city, widget: string }
+          - { label: Telefon, name: phone, widget: string }
+          - { label: Email podatelny, name: email, widget: string }
+          - { label: IČO, name: ico, widget: string }
+          - { label: Datová schránka (ID), name: ds, widget: string }
+          - { label: Formspree URL (kontaktní formulář), name: formspree, widget: string }
+          - { label: Tagline (popis v patičce), name: tagline, widget: string }
+
       - name: o-obci
         label: Stránka „O obci" – text
         file: src/content/stranky/o-obci.md

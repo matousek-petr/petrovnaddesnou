@@ -1,4 +1,6 @@
 ---
+import { getEntry } from 'astro:content';
+const k = (await getEntry('nastaveni', 'kontakt')).data;
 ---
 <footer class="bg-gray-900 text-gray-300 mt-auto">
   <div class="max-w-6xl mx-auto px-4 py-12">
@@ -12,9 +14,7 @@
             <div class="text-xs text-gray-400">Obec</div>
           </div>
         </div>
-        <p class="text-sm leading-relaxed text-gray-400">
-          Malá obec v Olomouckém kraji v podhůří Hrubého Jeseníku, na řece Desné.
-        </p>
+        <p class="text-sm leading-relaxed text-gray-400">{k.tagline}</p>
       </div>
 
       <!-- Quick links -->
@@ -34,13 +34,9 @@
       <div>
         <h3 class="text-white font-semibold text-sm mb-4 uppercase tracking-wide">Kontakt</h3>
         <address class="not-italic text-sm space-y-2 text-gray-400">
-          <p>Petrov nad Desnou 156<br/>788 16 Petrov nad Desnou</p>
-          <p>
-            <a href="tel:+420583284647" class="hover:text-white transition-colors">+420 583 284 647</a>
-          </p>
-          <p>
-            <a href="mailto:podatelna@petrovnaddesnou.cz" class="hover:text-white transition-colors">podatelna@petrovnaddesnou.cz</a>
-          </p>
+          <p>{k.address}<br/>{k.city}</p>
+          <p><a href={`tel:${k.phone.replace(/\s/g, '')}`} class="hover:text-white transition-colors">{k.phone}</a></p>
+          <p><a href={`mailto:${k.email}`} class="hover:text-white transition-colors">{k.email}</a></p>
         </address>
         <a
           href="https://www.facebook.com/petrovnaddesnou"

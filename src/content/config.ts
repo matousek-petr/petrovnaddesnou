@@ -111,27 +111,10 @@ const spolkyCollection = defineCollection({
   }),
 });
 
-// Nastavení – různé singleton soubory (uredni-hodiny, odpad…)
+// Nastavení – různé singleton soubory s různým tvarem dat
 const nastaveniCollection = defineCollection({
   type: 'data',
-  schema: z.union([
-    // uredni-hodiny.yaml
-    z.object({
-      note: z.string().optional(),
-      hours: z.array(z.object({
-        day: z.string(),
-        am: z.string(),
-        pm: z.string(),
-      })),
-    }),
-    // odpad.yaml
-    z.object({
-      items: z.array(z.object({
-        type: z.string(),
-        schedule: z.string(),
-      })),
-    }),
-  ]),
+  schema: z.record(z.any()),
 });
 
 export const collections = {
