@@ -2,34 +2,28 @@
 import Base from '@/layouts/Base.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import { getCollection } from 'astro:content';
 import '@/styles/global.css';
 
-const news = [
-  {
-    date: '30. 4. 2026',
-    title: 'Kompost',
-    excerpt: 'Informace pro občany o výdeji/odběru kompostu. Podrobnosti na obecním úřadě.',
-    href: '/aktuality',
-  },
-  {
-    date: '29. 4. 2026',
-    title: 'Upozornění na uzavírku místní komunikace',
-    excerpt: 'Obecní úřad upozorňuje na plánovanou dočasnou uzavírku místní komunikace. Objízdná trasa bude označena dopravním značením.',
-    href: '/aktuality',
-  },
-  {
-    date: '28. 4. 2026',
-    title: 'KIDSOK – výlukový jízdní řád linky 215 (od 4. 5. do 28. 7. 2026)',
-    excerpt: 'Z důvodu uzavírky ve Vikýřovicích platí od 4. května výlukový jízdní řád linky 215.',
-    href: '/aktuality',
-  },
-];
+// Načtení posledních 3 aktualit
+const allNews = (await getCollection('aktuality'))
+  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+  .slice(0, 3);
 
-const events = [
-  { date: '30. 4.', day: 'Čt', title: 'Pálení čarodějnic – Sobotín',    place: 'Park u skláren Rapotín', href: '/zivot#akce' },
-  { date: '8. 5.',  day: 'Pá', title: 'Petrovský den záchranných složek', place: 'Petrov nad Desnou',       href: '/zivot#akce' },
-  { date: '30. 4.', day: 'Čt', title: 'Floria Jaro – zahradnická výstava', place: 'Kroměříž',              href: '/zivot#akce' },
-];
+// Načtení příštích 3 akcí
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const upcomingEvents = (await getCollection('udalosti'))
+  .filter((e) => new Date(e.data.date) >= today && e.data.isFeatured)
+  .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime())
+  .slice(0, 3);
+
+// Načtení posledních 3 dokumentů z úřední desky
+const recentDocuments = (await getCollection('uredni_deska'))
+  .filter(d => !d.data.isArchived)
+  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+  .slice(0, 3);
 
 const quickLinks = [
   { icon: '📋', label: 'Úřední deska',      href: '/uredni-deska',  desc: 'Vyhlášky, oznámení a dokumenty' },
@@ -101,23 +95,34 @@ const quickLinks = [
         <a href="/zivot#akce" class="text-sm text-forest-600 hover:text-forest-700 font-medium">Všechny akce →</a>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {events.map(({ date, day, title, place, href }) => (
-          <a href={href} class="card flex items-start gap-4 p-4 hover:border-forest-200">
-            <div class="shrink-0 w-12 text-center bg-forest-50 rounded-lg py-1.5 border border-forest-100">
-              <p class="text-xs text-forest-500 font-medium uppercase">{day}</p>
-              <p class="text-lg font-bold text-forest-700 leading-tight">{date}</p>
-            </div>
-            <div class="min-w-0">
-              <p class="font-semibold text-gray-900 text-sm leading-snug line-clamp-2">{title}</p>
-              <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                </svg>
-                {place}
-              </p>
-            </div>
-          </a>
-        ))}
+        {upcomingEvents.length > 0 ? (
+          upcomingEvents.map((event) => {
+            const eventDate = new Date(event.data.date);
+            return (
+              <a href="/zivot#akce" class="card flex items-start gap-4 p-4 hover:border-forest-200">
+                <div class="shrink-0 w-12 text-center bg-forest-50 rounded-lg py-1.5 border border-forest-100">
+                  <p class="text-xs text-forest-500 font-medium uppercase">
+                    {new Intl.DateTimeFormat('cs-CZ', { weekday: 'short' }).format(eventDate).slice(0, 2).toUpperCase()}
+                  </p>
+                  <p class="text-lg font-bold text-forest-700 leading-tight">
+                    {new Intl.DateTimeFormat('cs-CZ', { month: '2-digit', day: '2-digit' }).format(eventDate).split('.').slice(0, 2).join('.')}
+                  </p>
+                </div>
+                <div class="min-w-0">
+                  <p class="font-semibold text-gray-900 text-sm leading-snug line-clamp-2">{event.data.title}</p>
+                  <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                    <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    </svg>
+                    {event.data.location}
+                  </p>
+                </div>
+              </a>
+            );
+          })
+        ) : (
+          <div class="col-span-full text-center py-8 text-gray-500">Žádné nadcházející akce</div>
+        )}
       </div>
     </section>
 
@@ -129,13 +134,19 @@ const quickLinks = [
         <h2 class="section-title">Aktuality</h2>
         <p class="section-subtitle">Nejnovější zprávy z obce</p>
         <div class="space-y-4">
-          {news.map(({ date, title, excerpt, href }) => (
-            <a href={href} class="card block p-5 hover:border-forest-200">
-              <time class="text-xs font-medium text-forest-600 uppercase tracking-wide">{date}</time>
-              <h3 class="font-semibold text-gray-900 mt-1 mb-2 group-hover:text-forest-700">{title}</h3>
-              <p class="text-sm text-gray-500 leading-relaxed line-clamp-2">{excerpt}</p>
-            </a>
-          ))}
+          {allNews.length > 0 ? (
+            allNews.map(({ slug, data }) => (
+              <a href={`/aktuality/${slug}`} class="card block p-5 hover:border-forest-200">
+                <time class="text-xs font-medium text-forest-600 uppercase tracking-wide">
+                  {new Intl.DateTimeFormat('cs-CZ', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(data.pubDate)}
+                </time>
+                <h3 class="font-semibold text-gray-900 mt-1 mb-2">{data.title}</h3>
+                <p class="text-sm text-gray-500 leading-relaxed line-clamp-2">{data.description}</p>
+              </a>
+            ))
+          ) : (
+            <p class="text-gray-500 text-sm">Zatím nejsou žádné aktuality.</p>
+          )}
         </div>
         <div class="mt-5">
           <a href="/aktuality" class="btn-secondary text-sm">
@@ -152,21 +163,23 @@ const quickLinks = [
           <h2 class="section-title">Úřední deska</h2>
           <p class="section-subtitle">Aktuálně zveřejněné dokumenty</p>
           <ul class="space-y-2">
-            {[
-              { title: 'Informace o vyúčtování ceny vodného a stočného', date: '29. 4. 2026' },
-              { title: 'Veřejná vyhláška – Daň z nemovitých věcí', date: '27. 4. 2026' },
-              { title: 'Veřejná vyhláška – Pokorný', date: '24. 4. 2026' },
-            ].map(({ title, date }) => (
-              <li class="flex gap-3 items-start p-3 rounded-lg bg-gray-50 hover:bg-forest-50 transition-colors cursor-pointer">
-                <svg class="w-4 h-4 text-forest-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-                <div>
-                  <p class="text-sm font-medium text-gray-800 leading-tight">{title}</p>
-                  <p class="text-xs text-gray-400 mt-0.5">{date}</p>
-                </div>
-              </li>
-            ))}
+            {recentDocuments.length > 0 ? (
+              recentDocuments.map(({ data }) => (
+                <li class="flex gap-3 items-start p-3 rounded-lg bg-gray-50 hover:bg-forest-50 transition-colors cursor-pointer">
+                  <svg class="w-4 h-4 text-forest-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  <div>
+                    <p class="text-sm font-medium text-gray-800 leading-tight">{data.title}</p>
+                    <p class="text-xs text-gray-400 mt-0.5">
+                      {new Intl.DateTimeFormat('cs-CZ', { day: '2-digit', month: '2-digit' }).format(data.pubDate)}
+                    </p>
+                  </div>
+                </li>
+              ))
+            ) : (
+              <p class="text-gray-500 text-xs">Žádné dokumenty k dispozici.</p>
+            )}
           </ul>
           <a href="/uredni-deska" class="text-sm text-forest-600 hover:text-forest-700 font-medium mt-3 inline-block">
             Celá úřední deska →
