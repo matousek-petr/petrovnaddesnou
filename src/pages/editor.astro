@@ -6,120 +6,256 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Editor Aktivit - Petrov nad Desnou</title>
+    <title>Správa webu | Petrov nad Desnou</title>
+    <meta name="description" content="Jednoduchý vstup do správy obsahu webu obce Petrov nad Desnou." />
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; padding: 20px; }
-      .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 30px; }
-      h1 { margin-bottom: 30px; color: #1a1a1a; }
-      .editor { margin-bottom: 30px; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; background: #fafafa; }
-      .editor h2 { font-size: 18px; margin-bottom: 15px; color: #333; }
-      .form-group { margin-bottom: 15px; }
-      label { display: block; font-weight: 500; margin-bottom: 5px; color: #555; }
-      input, textarea, select { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; }
-      textarea { min-height: 150px; resize: vertical; }
-      button { background: #2d5121; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500; }
-      button:hover { background: #1e3817; }
-      .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 6px; margin-top: 10px; display: none; }
-      .error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 6px; margin-top: 10px; display: none; }
-      .back-link { margin-bottom: 20px; }
-      a { color: #2d5121; text-decoration: none; }
-      a:hover { text-decoration: underline; }
+      :root {
+        --bg: #f4f7f2;
+        --card: #ffffff;
+        --text: #132015;
+        --muted: #5e6f61;
+        --brand: #2d5121;
+        --brand-2: #47743b;
+        --border: #dfe6dc;
+        --shadow: 0 18px 45px rgba(19, 32, 21, 0.08);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(71, 116, 59, 0.14), transparent 32%),
+          radial-gradient(circle at bottom right, rgba(45, 81, 33, 0.10), transparent 28%),
+          var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 32px 20px 48px;
+      }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .brand img {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+      }
+      .brand h1 {
+        margin: 0;
+        font-size: 1.35rem;
+        line-height: 1.1;
+      }
+      .brand p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .home-link {
+        color: var(--brand);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .hero {
+        background: rgba(255, 255, 255, 0.86);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(223, 230, 220, 0.9);
+        border-radius: 24px;
+        padding: 28px;
+        box-shadow: var(--shadow);
+        margin-bottom: 24px;
+      }
+      .hero h2 {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        line-height: 1.05;
+      }
+      .hero p {
+        margin: 0;
+        max-width: 70ch;
+        color: var(--muted);
+        font-size: 1.03rem;
+        line-height: 1.65;
+      }
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 22px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 20px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid transparent;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        color: white;
+        box-shadow: 0 12px 26px rgba(45, 81, 33, 0.22);
+      }
+      .btn-secondary {
+        background: white;
+        color: var(--brand);
+        border-color: var(--border);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 16px;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.93);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 22px;
+      }
+      .card h3 {
+        margin: 0 0 10px;
+        font-size: 1.15rem;
+      }
+      .card p, .card li {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .wide { grid-column: span 12; }
+      .half { grid-column: span 12; }
+      .third { grid-column: span 12; }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 12px;
+      }
+      .step {
+        padding: 16px;
+        border-radius: 16px;
+        background: #f8fbf7;
+        border: 1px solid #e5ece3;
+      }
+      .step strong {
+        display: block;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      ul { padding-left: 18px; margin: 10px 0 0; }
+      .fineprint {
+        margin-top: 16px;
+        font-size: 0.92rem;
+        color: var(--muted);
+      }
+      .feature-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .feature {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #edf5ea;
+        color: var(--brand);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      @media (min-width: 760px) {
+        .half { grid-column: span 6; }
+        .third { grid-column: span 4; }
+      }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="back-link">
-        <a href="/">← Zpět na web</a>
-      </div>
-      <h1>📝 Editor Aktivit</h1>
-      
-      <div class="editor">
-        <h2>Přidat Novou Aktualitu</h2>
-        <form id="aktualityForm">
-          <div class="form-group">
-            <label>Nadpis *</label>
-            <input type="text" name="title" required placeholder="Název artiklu">
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <img src="/foto/znak.png" alt="Znak obce Petrov nad Desnou" />
+          <div>
+            <h1>Správa webu</h1>
+            <p>Petrov nad Desnou</p>
           </div>
-          <div class="form-group">
-            <label>Popis *</label>
-            <textarea name="description" required placeholder="Krátký popis"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Datum publikace *</label>
-            <input type="datetime-local" name="pubDate" required>
-          </div>
-          <div class="form-group">
-            <label>Kategorie *</label>
-            <select name="category" required>
-              <option value="">-- Vyberte --</option>
-              <option value="Oznámení">Oznámení</option>
-              <option value="Akce">Akce</option>
-              <option value="Doprava">Doprava</option>
-              <option value="Zastupitelstvo">Zastupitelstvo</option>
-              <option value="Ostatní">Ostatní</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Autor</label>
-            <input type="text" name="author" placeholder="Volitelné">
-          </div>
-          <div class="form-group">
-            <label>Obsah (Markdown) *</label>
-            <textarea name="body" required placeholder="Napište obsah v Markdownu..."></textarea>
-          </div>
-          <button type="submit">💾 Uložit Aktualitu</button>
-          <div class="success">✅ Aktivita úspěšně uložena!</div>
-          <div class="error">❌ Chyba: <span></span></div>
-        </form>
+        </div>
+        <a class="home-link" href="/">← Zpět na web</a>
       </div>
 
-      <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin-top: 30px;">
-        <h3>💡 Jak používat:</h3>
-        <ul style="margin-left: 20px; margin-top: 10px;">
-          <li><strong>Nadpis:</strong> Krátký název artikulu</li>
-          <li><strong>Popis:</strong> Prvních 200 znaků se zobrazí v seznamu</li>
-          <li><strong>Obsah:</strong> Celý obsah v <a href="https://www.markdownguide.org/" target="_blank">Markdownu</a></li>
-          <li><strong>Kategorie:</strong> Ovlivňuje barvu značky na webu</li>
-        </ul>
+      <section class="hero">
+        <span class="badge">Bez programování</span>
+        <h2>Obsah webu lze upravovat přes formuláře.</h2>
+        <p>
+          Pro běžnou správu není potřeba programovat. Otevřeš editor, vybereš typ obsahu,
+          doplníš text, datum nebo obrázek a uložíš. Tím se změna promítne na web.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/admin/">Otevřít editor obsahu</a>
+          <a class="btn btn-secondary" href="/admin/#/collections/udalosti/new">Přidat novou akci</a>
+        </div>
+      </section>
+
+      <div class="grid">
+        <section class="card wide">
+          <h3>Co jde upravovat</h3>
+          <div class="feature-list">
+            <div class="feature"><strong>Aktuality</strong><span>Novinky, oznamování, články a krátké zprávy.</span></div>
+            <div class="feature"><strong>Akce v obci</strong><span>Datum, čas, místo, plakát a příznak pro hlavní stranu.</span></div>
+            <div class="feature"><strong>Úřední deska</strong><span>Název dokumentu, datum, kategorie, reference, PDF odkaz i odkaz na detail.</span></div>
+            <div class="feature"><strong>Obrázky</strong><span>Plakáty a další soubory lze nahrát přímo v editoru.</span></div>
+          </div>
+        </section>
+
+        <section class="card half">
+          <h3>Jak to funguje</h3>
+          <div class="steps">
+            <div class="step">
+              <strong>1. Otevři editor</strong>
+              Klikni na tlačítko a přihlas se.
+            </div>
+            <div class="step">
+              <strong>2. Vyber obsah</strong>
+              Aktuality, akce nebo úřední desku.
+            </div>
+            <div class="step">
+              <strong>3. Ulož</strong>
+              Změny se zapíší do obsahu webu.
+            </div>
+          </div>
+        </section>
+
+        <section class="card half">
+          <h3>Co je potřeba</h3>
+          <ul>
+            <li>Otevřít stránku editoru v prohlížeči.</li>
+            <li>Přihlásit se účtem, který má přístup ke správě obsahu.</li>
+            <li>Vyplnit formulář a potvrdit uložení.</li>
+          </ul>
+          <p class="fineprint">
+            Pokud chceš, můžu doplnit i samostatný návod pro úřad s jedním odstavcem po kroku.
+          </p>
+        </section>
       </div>
     </div>
-
-    <script>
-      document.getElementById('aktualityForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
-        
-        // Vytvoři slug z nadpisu
-        const slug = data.title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '');
-        
-        // Formátuj YAML frontmatter
-        const yaml = `title: ${data.title}
-description: ${data.description}
-pubDate: ${new Date(data.pubDate).toISOString().split('T')[0]}
-category: ${data.category}${data.author ? `\nauthor: ${data.author}` : ''}`;
-        
-        const markdown = `---\n${yaml}\n---\n\n${data.body}`;
-        
-        // Simuluj uložení (v produkci by to šlo na server)
-        console.log('Nový soubor:', `src/content/aktuality/${slug}.md`);
-        console.log('Obsah:');
-        console.log(markdown);
-        
-        // Zobraz success zprávu
-        const successMsg = e.target.querySelector('.success');
-        successMsg.style.display = 'block';
-        e.target.reset();
-        
-        setTimeout(() => {
-          successMsg.style.display = 'none';
-        }, 3000);
-      });
-    </script>
   </body>
 </html>

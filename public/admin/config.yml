@@ -51,6 +51,7 @@ collections:
       - { label: Místo, name: location, widget: string }
       - { label: Popis, name: description, widget: text }
       - { label: Typ akce, name: eventType, widget: select, options: [Kultura, Sport, Setkání, Administrativa], required: false }
+      - { label: Plakát, name: posterImage, widget: image, required: false, hint: "Nahraj plakát nebo zkopíruj cestu k obrázku" }
       - { label: Featured (zobrazit na homepage), name: isFeatured, widget: boolean, default: false }
       - { label: Obsah, name: body, widget: markdown, required: false }
 
@@ -65,7 +66,9 @@ collections:
     fields:
       - { label: Název dokumentu, name: title, widget: string }
       - { label: Datum zveřejnění, name: pubDate, widget: datetime }
-      - { label: Kategorie, name: category, widget: select, options: [Vyhláška, Úřední oznámení, Zápis ze zasedání, Výběrové řízení] }
+      - { label: Kategorie, name: category, widget: string, hint: "Např. Informace z obecního úřadu, Ekonomika obce, Veřejné zakázky" }
+      - { label: Číslo jednací / reference, name: reference, widget: string, required: false }
       - { label: URL na PDF, name: fileUrl, widget: string, required: false }
+      - { label: URL na detail dokumentu, name: sourceUrl, widget: string, required: false }
       - { label: Archivováno, name: isArchived, widget: boolean, default: false }
       - { label: Obsah, name: body, widget: markdown, required: false }
