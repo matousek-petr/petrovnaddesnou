@@ -149,3 +149,35 @@ Přijďte oslovat příchod jara na **prvomájových slavnostech 2026**.
 ## 📚 Další Informace
 
 Více o Astro Content Collections: https://docs.astro.build/en/guides/content-collections/
+
+---
+
+## ☁️ Produkce na Vercel (Decap CMS)
+
+Projekt je připravený pro produkční editaci přes GitHub backend Decap CMS.
+
+### Co je v projektu připravené
+
+- `public/admin/config.yml` používá `backend: github`
+- OAuth endpointy pro Decap jsou ve Vercel funkcích:
+  - `api/auth.cjs`
+  - `api/callback.cjs`
+
+### Co je potřeba nastavit ve Vercel
+
+1. V GitHubu vytvořit OAuth App.
+2. Callback URL nastavit na:
+  - `https://petrovnaddesnou.vercel.app/api/callback`
+3. Ve Vercel projektu nastavit env proměnné:
+  - `PUBLIC_SITE_URL`
+  - `GITHUB_CLIENT_ID`
+  - `GITHUB_CLIENT_SECRET`
+
+Vzor je v souboru `.env.vercel.example`.
+
+### Jak to otestovat po deployi
+
+1. Otevřít `https://petrovnaddesnou.vercel.app/admin/`
+2. Přihlásit se přes GitHub.
+3. Upravit položku v kolekci (např. Aktuality) a uložit.
+4. Ověřit, že změna vytvořila commit v repozitáři.

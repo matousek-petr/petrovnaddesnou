@@ -1,10 +1,12 @@
 backend:
-  name: proxy
-  proxy_url: http://localhost:3001/api
+  name: github
+  repo: matousek-petr/petrovnaddesnou
   branch: main
+  base_url: https://petrovnaddesnou.vercel.app
+  auth_endpoint: api/auth
   
-site_url: http://localhost:4321
-display_url: http://localhost:4321
+site_url: https://petrovnaddesnou.vercel.app
+display_url: https://petrovnaddesnou.vercel.app
 logo_url: /foto/znak.png
 
 # Media folder je pro uploady obrázků
